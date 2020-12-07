@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
   },
   image: {
     backgroundImage:
-      "url(https://static-cdn.jtvnw.net/jtv_user_pictures/519d7408-0f35-4391-af6b-8777a9db666a-profile_image-300x300.png)",
+      "url(https://i.imgur.com/2EiDBoG.png)",
     backgroundRepeat: "no-repeat",
     backgroundColor:
       theme.palette.type === "light"
