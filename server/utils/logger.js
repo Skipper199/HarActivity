@@ -1,3 +1,4 @@
+// Prints information
 const info = (...params) => {
   console.log(...params);
 };

@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const singupRouter = require('express').Router();
 const User = require('../models/user');
 
+// Handle signup request
 singupRouter.post('/', async (request, response) => {
   const { body } = request;
 

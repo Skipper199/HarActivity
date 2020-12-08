@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 
+// Create schema for user
 const userSchema = mongoose.Schema({
   username: {
     type: String,
@@ -21,6 +22,7 @@ const userSchema = mongoose.Schema({
   },
 });
 
+// Delete unwanted information
 userSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString();
