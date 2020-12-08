@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Signup from './components/Signup';
 import Login from './components/Login';
+import Dashboard from './components/Dashboard';
 import loginService from './services/login';
 import {
   BrowserRouter as Router,
@@ -17,14 +18,16 @@ const App = () => {
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
 
+  const history = useHistory();
+
   // Check if user is logged in
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser');
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
       setUser(user);
+      console.log('Already logged in');
     }
-    console.log('Already logged in');
   }, []);
 
   // Log in user and store the returned token
@@ -40,6 +43,7 @@ const App = () => {
 
       setUser(user);
       console.log(`Logged in as: ${user.username}`);
+      history.push('/dashboard');
     } catch (exception) {
       console.log('Wrong credentials');
     }
@@ -60,9 +64,10 @@ const App = () => {
             handleSubmit={handleLogin}
           />
         </Route>
-        <Route path="/">
-          <Signup />
+        <Route path="/dashboard">
+          <Dashboard user={user} />
         </Route>
+        <Route path="*" exact={true} component={() => <h1>ds</h1>} />
       </Switch>
     </div>
   );
