@@ -19,8 +19,25 @@ singupRouter.post('/', async (request, response) => {
   try {
     const savedUser = await user.save();
     response.json(savedUser);
-  } catch (e) {
-    console.log(e);
+  } catch (exception) {
+    if (exception.errors.username) {
+      return response.status(401).json({
+        error: 'Usename already in use.',
+      });
+    }
+
+    if (exception.errors.email) {
+      return response.status(401).json({
+        error: 'Email already in use.',
+      });
+    }
+
+    if (exception.errors.password) {
+      return response.status(401).json({
+        error: 'Password should be...',
+      });
+    }
+
     return response.status(401).json({
       error: 'Duplicate entry',
     });
