@@ -3,6 +3,7 @@ import Signup from './components/Signup';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import loginService from './services/login';
+import signupService from './services/signup';
 import {
   BrowserRouter as Router,
   Switch,
@@ -16,6 +17,7 @@ import {
 const App = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
 
   // Checks if user is logged in
   const checkLoggedUser = () => {
@@ -53,11 +55,51 @@ const App = () => {
     }
   };
 
+  // Sign up user
+  const handleSignup = async (event) => {
+    event.preventDefault();
+    try {
+      const userOnSignup = await signupService.signup({
+        username,
+        password,
+        email,
+      });
+
+      const user = await loginService.login({
+        username,
+        password,
+      });
+
+      window.localStorage.setItem('loggedUser', JSON.stringify(user));
+
+      setUser(user);
+      console.log(`Logged in as: ${user.username}`);
+      history.push('/dashboard');
+    } catch (exception) {
+      // Sets the error from server response
+      console.log(exception.response.data.error);
+      setErrorMessage(exception.response.data.error);
+    }
+  };
+
   return (
     <div>
       <Switch>
         <Route path="/signup">
-          {user === null ? <Signup /> : <Redirect to="/dashboard" />}
+          {user === null ? (
+            <Signup
+              username={username}
+              password={password}
+              email={email}
+              handleUsernameChange={({ target }) => setUsername(target.value)}
+              handlePasswordChange={({ target }) => setPassword(target.value)}
+              handleEmailChange={({ target }) => setEmail(target.value)}
+              handleSubmit={handleSignup}
+              errorMessage={errorMessage}
+            />
+          ) : (
+            <Redirect to="/dashboard" />
+          )}
         </Route>
         <Route path="/login">
           {user === null ? (

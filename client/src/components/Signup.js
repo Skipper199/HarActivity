@@ -54,7 +54,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Signup = () => {
+const Signup = ({
+  handleSubmit,
+  handleUsernameChange,
+  handlePasswordChange,
+  handleEmailChange,
+  username,
+  password,
+  email,
+  errorMessage,
+}) => {
   const classes = useStyles();
 
   return (
@@ -71,7 +80,7 @@ const Signup = () => {
             <Typography component="h1" variant="h5">
               Sign Up
             </Typography>
-            <form className={classes.form} noValidate>
+            <form onSubmit={handleSubmit} className={classes.form} noValidate>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <TextField
@@ -83,6 +92,8 @@ const Signup = () => {
                     id="username"
                     label="Username"
                     autoFocus
+                    value={username}
+                    onChange={handleUsernameChange}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -94,6 +105,8 @@ const Signup = () => {
                     label="Email Address"
                     name="email"
                     autoComplete="email"
+                    value={email}
+                    onChange={handleEmailChange}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -106,6 +119,8 @@ const Signup = () => {
                     type="password"
                     id="password"
                     autoComplete="current-password"
+                    value={password}
+                    onChange={handlePasswordChange}
                   />
                 </Grid>
               </Grid>

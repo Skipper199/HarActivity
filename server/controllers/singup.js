@@ -16,9 +16,15 @@ singupRouter.post('/', async (request, response) => {
     isAdmin: false,
   });
 
-  const savedUser = await user.save();
-
-  response.json(savedUser);
+  try {
+    const savedUser = await user.save();
+    response.json(savedUser);
+  } catch (e) {
+    console.log(e);
+    return response.status(401).json({
+      error: 'Duplicate entry',
+    });
+  }
 });
 
 module.exports = singupRouter;
