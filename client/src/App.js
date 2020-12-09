@@ -16,19 +16,21 @@ import {
 const App = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [user, setUser] = useState(null);
 
-  const history = useHistory();
-
-  // Check if user is logged in
-  useEffect(() => {
+  // Checks if user is logged in
+  const checkLoggedUser = () => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser');
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
-      setUser(user);
-      console.log('Already logged in');
+      return user;
+    } else {
+      return null;
     }
-  }, []);
+  };
+
+  const [user, setUser] = useState(checkLoggedUser);
+
+  const history = useHistory();
 
   // Log in user and store the returned token
   const handleLogin = async (event) => {
@@ -53,21 +55,37 @@ const App = () => {
     <div>
       <Switch>
         <Route path="/signup">
-          <Signup />
+          {user === null ? <Signup /> : <Redirect to="/dashboard" />}
         </Route>
         <Route path="/login">
-          <Login
-            username={username}
-            password={password}
-            handleUsernameChange={({ target }) => setUsername(target.value)}
-            handlePasswordChange={({ target }) => setPassword(target.value)}
-            handleSubmit={handleLogin}
-          />
+          {user === null ? (
+            <Login
+              username={username}
+              password={password}
+              handleUsernameChange={({ target }) => setUsername(target.value)}
+              handlePasswordChange={({ target }) => setPassword(target.value)}
+              handleSubmit={handleLogin}
+            />
+          ) : (
+            <Redirect to="/dashboard" />
+          )}
         </Route>
+
         <Route path="/dashboard">
-          <Dashboard user={user} />
+          {user === null ? <Redirect to="/login" /> : <Dashboard user={user} />}
         </Route>
-        <Route path="*" exact={true} component={() => <h1>ds</h1>} />
+        <Route exact path="/">
+          {user === null ? (
+            <Redirect to="/login" />
+          ) : (
+            <Redirect to="/dashboard" />
+          )}
+        </Route>
+        <Route
+          path="*"
+          exact={true}
+          component={() => <h1>Does not exist</h1>}
+        />
       </Switch>
     </div>
   );
