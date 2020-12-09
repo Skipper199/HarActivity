@@ -10,6 +10,7 @@ import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
+import Alert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/core/styles';
 
 const Copyright = () => {
@@ -32,10 +33,6 @@ const useStyles = makeStyles((theme) => ({
   image: {
     backgroundImage: 'url(https://i.imgur.com/2EiDBoG.png)',
     backgroundRepeat: 'no-repeat',
-    backgroundColor:
-      theme.palette.type === 'light'
-        ? theme.palette.grey[50]
-        : theme.palette.grey[900],
     backgroundSize: 'cover',
     backgroundPosition: 'center',
   },
@@ -64,6 +61,7 @@ const Login = ({
   handlePasswordChange,
   username,
   password,
+  errorMessage,
 }) => {
   const classes = useStyles();
 
@@ -112,6 +110,18 @@ const Login = ({
                   />
                 </Grid>
               </Grid>
+              {/* If the error exists show it */}
+              {errorMessage === null ? (
+                <></>
+              ) : (
+                <div>
+                  <br></br>
+                  <Alert variant="outlined" severity="error">
+                    {errorMessage}
+                  </Alert>
+                </div>
+              )}
+
               <Button
                 type="submit"
                 fullWidth

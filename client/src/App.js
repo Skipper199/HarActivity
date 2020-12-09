@@ -29,6 +29,7 @@ const App = () => {
   };
 
   const [user, setUser] = useState(checkLoggedUser);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const history = useHistory();
 
@@ -47,7 +48,8 @@ const App = () => {
       console.log(`Logged in as: ${user.username}`);
       history.push('/dashboard');
     } catch (exception) {
-      console.log('Wrong credentials');
+      // Sets the error from server response
+      setErrorMessage(exception.response.data.error);
     }
   };
 
@@ -65,6 +67,7 @@ const App = () => {
               handleUsernameChange={({ target }) => setUsername(target.value)}
               handlePasswordChange={({ target }) => setPassword(target.value)}
               handleSubmit={handleLogin}
+              errorMessage={errorMessage}
             />
           ) : (
             <Redirect to="/dashboard" />
