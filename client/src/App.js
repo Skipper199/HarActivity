@@ -47,7 +47,6 @@ const App = () => {
       window.localStorage.setItem('loggedUser', JSON.stringify(user));
 
       setUser(user);
-      console.log(`Logged in as: ${user.username}`);
       history.push('/dashboard');
     } catch (exception) {
       // Empties fields

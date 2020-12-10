@@ -5,9 +5,18 @@ import './index.css';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ThemeProvider } from '@material-ui/styles';
 import darkTheme from './themes/darkTheme';
+import lightTheme from './themes/lightTheme';
+
+import { createMuiTheme } from '@material-ui/core/styles';
+
+const dark = createMuiTheme({
+  palette: {
+    type: 'dark',
+  },
+});
 
 ReactDOM.render(
-  <ThemeProvider theme={darkTheme}>
+  <ThemeProvider theme={dark}>
     <Router>
       <App />
     </Router>
