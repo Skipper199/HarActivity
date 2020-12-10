@@ -10,6 +10,8 @@ import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
+import Alert from '@material-ui/lab/Alert';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import { makeStyles } from '@material-ui/core/styles';
 
 const Copyright = () => {
@@ -122,8 +124,23 @@ const Signup = ({
                     value={password}
                     onChange={handlePasswordChange}
                   />
+                  <FormHelperText id="component-helper-text">
+                    Password must be at least 8 characters long, contain at
+                    least an upper case letter, a number and a symbol.
+                  </FormHelperText>
                 </Grid>
               </Grid>
+              {/* If the error exists show it */}
+              {errorMessage === null ? (
+                <></>
+              ) : (
+                <div>
+                  <br></br>
+                  <Alert variant="outlined" severity="error">
+                    {errorMessage}
+                  </Alert>
+                </div>
+              )}
               <Button
                 type="submit"
                 fullWidth

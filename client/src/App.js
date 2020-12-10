@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import Signup from './components/Signup';
-import Login from './components/Login';
-import Dashboard from './components/Dashboard';
+import Signup from './components/Authentication/Signup';
+import Login from './components/Authentication/Login';
+import Dashboard from './components/User/Dashboard';
 import loginService from './services/login';
 import signupService from './services/signup';
 import {
@@ -50,6 +50,10 @@ const App = () => {
       console.log(`Logged in as: ${user.username}`);
       history.push('/dashboard');
     } catch (exception) {
+      // Empties fields
+      setUsername('');
+      setPassword('');
+
       // Sets the error from server response
       setErrorMessage(exception.response.data.error);
     }
@@ -59,7 +63,7 @@ const App = () => {
   const handleSignup = async (event) => {
     event.preventDefault();
     try {
-      const userOnSignup = await signupService.signup({
+      await signupService.signup({
         username,
         password,
         email,
@@ -76,6 +80,11 @@ const App = () => {
       console.log(`Logged in as: ${user.username}`);
       history.push('/dashboard');
     } catch (exception) {
+      // Empties fields
+      setUsername('');
+      setPassword('');
+      setEmail('');
+
       // Sets the error from server response
       console.log(exception.response.data.error);
       setErrorMessage(exception.response.data.error);
