@@ -21,6 +21,11 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 import ListItems from './ListItems';
 
+import { Switch, Route, useRouteMatch } from 'react-router-dom';
+import Profile from './Profile';
+import UploadFiles from './UploadFiles';
+import Heatmap from './Heatmap';
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -130,6 +135,8 @@ const Dashboard = ({ user }) => {
     window.localStorage.removeItem('loggedUser');
   };
 
+  let { path } = useRouteMatch();
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -181,25 +188,24 @@ const Dashboard = ({ user }) => {
           </IconButton>
         </div>
         <Divider />
-        <List>{ListItems}</List>
+        <List>
+          <ListItems />
+        </List>
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
-          <Grid container spacing={3}>
-            {/* Chart */}
-            <Grid item xs={12} md={8} lg={9}>
-              <Paper className={fixedHeightPaper}></Paper>
-            </Grid>
-            {/* Recent Deposits */}
-            <Grid item xs={12} md={4} lg={3}>
-              <Paper className={fixedHeightPaper}></Paper>
-            </Grid>
-            {/* Recent Orders */}
-            <Grid item xs={12}>
-              <Paper className={classes.paper}></Paper>
-            </Grid>
-          </Grid>
+          <Switch>
+            <Route exact path={`${path}/profile`}>
+              <Profile />
+            </Route>
+            <Route exact path={`${path}/uploadfiles`}>
+              <UploadFiles />
+            </Route>
+            <Route exact path={`${path}/heatmap`}>
+              <Heatmap />
+            </Route>
+          </Switch>
           <Box pt={4}>
             <Copyright />
           </Box>

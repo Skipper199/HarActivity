@@ -6,27 +6,32 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import CloudUpload from '@material-ui/icons/CloudUpload';
 import MapIcon from '@material-ui/icons/Map';
 
-const ListItems = (
-  <div>
-    <ListItem button>
-      <ListItemIcon>
-        <AccountCircle />
-      </ListItemIcon>
-      <ListItemText primary="Profile" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <CloudUpload />
-      </ListItemIcon>
-      <ListItemText primary="Upload Files" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <MapIcon />
-      </ListItemIcon>
-      <ListItemText primary="Heatmap" />
-    </ListItem>
-  </div>
-);
+import { useHistory } from 'react-router-dom';
+
+const ListItems = () => {
+  const history = useHistory();
+  return (
+    <div>
+      <ListItem button onClick={() => history.push('/dashboard/profile')}>
+        <ListItemIcon>
+          <AccountCircle />
+        </ListItemIcon>
+        <ListItemText primary="Profile" />
+      </ListItem>
+      <ListItem button onClick={() => history.push('/dashboard/uploadfiles')}>
+        <ListItemIcon>
+          <CloudUpload />
+        </ListItemIcon>
+        <ListItemText primary="Upload Files" />
+      </ListItem>
+      <ListItem button onClick={() => history.push('/dashboard/heatmap')}>
+        <ListItemIcon>
+          <MapIcon />
+        </ListItemIcon>
+        <ListItemText primary="Heatmap" />
+      </ListItem>
+    </div>
+  );
+};
 
 export default ListItems;

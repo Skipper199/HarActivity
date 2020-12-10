@@ -1,18 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Signup from './components/Authentication/Signup';
 import Login from './components/Authentication/Login';
 import Dashboard from './components/User/Dashboard';
 import loginService from './services/login';
 import signupService from './services/signup';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  Redirect,
-  useRouteMatch,
-  useHistory,
-} from 'react-router-dom';
+import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
 
 const App = () => {
   const [username, setUsername] = useState('');
