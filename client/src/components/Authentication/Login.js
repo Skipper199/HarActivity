@@ -13,18 +13,7 @@ import Container from '@material-ui/core/Container';
 import Alert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/core/styles';
 
-const Copyright = () => {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        HarActivity
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-};
+import Footer from '../Footer';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -141,7 +130,7 @@ const Login = ({
             </form>
           </div>
           <Box mt={5}>
-            <Copyright />
+            <Footer />
           </Box>
         </Container>
       </Grid>

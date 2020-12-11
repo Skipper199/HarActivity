@@ -12,19 +12,19 @@ const ListItems = () => {
   const history = useHistory();
   return (
     <div>
-      <ListItem button onClick={() => history.push('/dashboard/profile')}>
+      <ListItem button onClick={() => history.push('/user/profile')}>
         <ListItemIcon>
           <AccountCircle />
         </ListItemIcon>
         <ListItemText primary="Profile" />
       </ListItem>
-      <ListItem button onClick={() => history.push('/dashboard/uploadfiles')}>
+      <ListItem button onClick={() => history.push('/user/uploadfiles')}>
         <ListItemIcon>
           <CloudUpload />
         </ListItemIcon>
         <ListItemText primary="Upload Files" />
       </ListItem>
-      <ListItem button onClick={() => history.push('/dashboard/heatmap')}>
+      <ListItem button onClick={() => history.push('/user/heatmap')}>
         <ListItemIcon>
           <MapIcon />
         </ListItemIcon>

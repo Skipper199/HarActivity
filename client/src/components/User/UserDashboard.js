@@ -20,6 +20,8 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import Tooltip from '@material-ui/core/Tooltip';
 
 import ListItems from './ListItems';
+import Footer from '../Footer';
+import Error404 from '../Error404';
 
 import {
   Switch,
@@ -32,19 +34,6 @@ import {
 import Profile from './Profile';
 import UploadFiles from './UploadFiles';
 import Heatmap from './Heatmap';
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
 
 const drawerWidth = 240;
 
@@ -127,7 +116,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Dashboard = ({ user }) => {
+const UserDashboard = ({ user }) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {
@@ -220,8 +209,8 @@ const Dashboard = ({ user }) => {
               <Switch>
                 <Route
                   exact
-                  path="/dashboard"
-                  component={() => <Redirect to="/dashboard/profile" />}
+                  path="/user"
+                  component={() => <Redirect to="/user/profile" />}
                 />
                 <Route exact path={`${path}/profile`}>
                   <Profile />
@@ -234,15 +223,15 @@ const Dashboard = ({ user }) => {
                 </Route>
               </Switch>
               <Box pt={4}>
-                <Copyright />
+                <Footer />
               </Box>
             </Container>
           </main>
         </Route>
-        <Route path="/dashboard" component={() => <h1>Does not exist</h1>} />
+        <Route path="/user" component={Error404} />
       </Switch>
     </div>
   );
 };
 
-export default Dashboard;
+export default UserDashboard;

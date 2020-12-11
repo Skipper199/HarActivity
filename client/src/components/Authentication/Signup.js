@@ -16,18 +16,7 @@ import InfoIcon from '@material-ui/icons/Info';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Tooltip from '@material-ui/core/Tooltip';
 
-const Copyright = () => {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        HarActivity
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-};
+import Footer from '../Footer';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -169,7 +158,7 @@ const Signup = ({
             </form>
           </div>
           <Box mt={5}>
-            <Copyright />
+            <Footer />
           </Box>
         </Container>
       </Grid>

@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import Signup from './components/Authentication/Signup';
 import Login from './components/Authentication/Login';
-import Dashboard from './components/User/Dashboard';
+import UserDashboard from './components/User/UserDashboard';
 import loginService from './services/login';
 import signupService from './services/signup';
 import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
+
+import Error404 from './components/Error404';
 
 const App = () => {
   const [username, setUsername] = useState('');
@@ -39,7 +41,7 @@ const App = () => {
       window.localStorage.setItem('loggedUser', JSON.stringify(user));
 
       setUser(user);
-      history.push('/dashboard');
+      history.push('/user');
     } catch (exception) {
       // Empties fields
       setUsername('');
@@ -69,7 +71,7 @@ const App = () => {
 
       setUser(user);
       console.log(`Logged in as: ${user.username}`);
-      history.push('/dashboard');
+      history.push('/user');
     } catch (exception) {
       // Empties fields
       setUsername('');
@@ -98,7 +100,7 @@ const App = () => {
               errorMessage={errorMessage}
             />
           ) : (
-            <Redirect to="/dashboard" />
+            <Redirect to="/user" />
           )}
         </Route>
         <Route exact path="/login">
@@ -112,25 +114,21 @@ const App = () => {
               errorMessage={errorMessage}
             />
           ) : (
-            <Redirect to="/dashboard" />
+            <Redirect to="/user" />
           )}
         </Route>
 
-        <Route path="/dashboard">
-          {user === null ? <Redirect to="/login" /> : <Dashboard user={user} />}
-        </Route>
-        <Route exact path="/">
+        <Route path="/user">
           {user === null ? (
             <Redirect to="/login" />
           ) : (
-            <Redirect to="/dashboard" />
+            <UserDashboard user={user} />
           )}
         </Route>
-        <Route
-          path="*"
-          exact={true}
-          component={() => <h1>Does not exist</h1>}
-        />
+        <Route exact path="/">
+          {user === null ? <Redirect to="/login" /> : <Redirect to="/user" />}
+        </Route>
+        <Route path="*" exact={true} component={Error404} />
       </Switch>
     </div>
   );
