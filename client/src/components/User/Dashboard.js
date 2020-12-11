@@ -21,7 +21,14 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 import ListItems from './ListItems';
 
-import { Switch, Route, useRouteMatch } from 'react-router-dom';
+import {
+  Switch,
+  Route,
+  useRouteMatch,
+  useHistory,
+  Redirect,
+  Router,
+} from 'react-router-dom';
 import Profile from './Profile';
 import UploadFiles from './UploadFiles';
 import Heatmap from './Heatmap';
@@ -135,82 +142,105 @@ const Dashboard = ({ user }) => {
     window.localStorage.removeItem('loggedUser');
   };
 
-  let { path } = useRouteMatch();
+  //const history = useHistory();
 
+  let { path } = useRouteMatch();
+  //history.push(`${path}/profile`);
   return (
     <div className={classes.root}>
-      <CssBaseline />
-      <AppBar
-        position="absolute"
-        className={clsx(classes.appBar, open && classes.appBarShift)}
-      >
-        <Toolbar className={classes.toolbar}>
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            className={clsx(
-              classes.menuButton,
-              open && classes.menuButtonHidden
-            )}
+      <Switch>
+        <Route
+          exact
+          path={[
+            `${path}/`,
+            `${path}/profile`,
+            `${path}/uploadfiles`,
+            `${path}/heatmap`,
+          ]}
+        >
+          <CssBaseline />
+          <AppBar
+            position="absolute"
+            className={clsx(classes.appBar, open && classes.appBarShift)}
           >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            component="h1"
-            variant="h6"
-            color="inherit"
-            noWrap
-            className={classes.title}
-          >
-            Hello, {user.username}!
-          </Typography>
-          <Tooltip title="Logout">
-            <Link color="inherit" href="/login">
-              <IconButton color="inherit" onClick={handleLogoutClick}>
-                <ExitToAppIcon fontSize="large" />
+            <Toolbar className={classes.toolbar}>
+              <IconButton
+                edge="start"
+                color="inherit"
+                aria-label="open drawer"
+                onClick={handleDrawerOpen}
+                className={clsx(
+                  classes.menuButton,
+                  open && classes.menuButtonHidden
+                )}
+              >
+                <MenuIcon />
               </IconButton>
-            </Link>
-          </Tooltip>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        variant="permanent"
-        classes={{
-          paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
-        }}
-        open={open}
-      >
-        <div className={classes.toolbarIcon}>
-          <IconButton onClick={handleDrawerClose}>
-            <ChevronLeftIcon />
-          </IconButton>
-        </div>
-        <Divider />
-        <List>
-          <ListItems />
-        </List>
-      </Drawer>
-      <main className={classes.content}>
-        <div className={classes.appBarSpacer} />
-        <Container maxWidth="lg" className={classes.container}>
-          <Switch>
-            <Route exact path={`${path}/profile`}>
-              <Profile />
-            </Route>
-            <Route exact path={`${path}/uploadfiles`}>
-              <UploadFiles />
-            </Route>
-            <Route exact path={`${path}/heatmap`}>
-              <Heatmap />
-            </Route>
-          </Switch>
-          <Box pt={4}>
-            <Copyright />
-          </Box>
-        </Container>
-      </main>
+              <Typography
+                component="h1"
+                variant="h6"
+                color="inherit"
+                noWrap
+                className={classes.title}
+              >
+                Hello, {user.username}!
+              </Typography>
+              <Tooltip title="Logout">
+                <Link color="inherit" href="/login">
+                  <IconButton color="inherit" onClick={handleLogoutClick}>
+                    <ExitToAppIcon fontSize="large" />
+                  </IconButton>
+                </Link>
+              </Tooltip>
+            </Toolbar>
+          </AppBar>
+          <Drawer
+            variant="permanent"
+            classes={{
+              paper: clsx(
+                classes.drawerPaper,
+                !open && classes.drawerPaperClose
+              ),
+            }}
+            open={open}
+          >
+            <div className={classes.toolbarIcon}>
+              <IconButton onClick={handleDrawerClose}>
+                <ChevronLeftIcon />
+              </IconButton>
+            </div>
+            <Divider />
+            <List>
+              <ListItems />
+            </List>
+          </Drawer>
+          <main className={classes.content}>
+            <div className={classes.appBarSpacer} />
+            <Container maxWidth="lg" className={classes.container}>
+              <Switch>
+                <Route
+                  exact
+                  path="/dashboard"
+                  component={() => <Redirect to="/dashboard/profile" />}
+                />
+                <Route exact path={`${path}/profile`}>
+                  <Profile />
+                </Route>
+                <Route exact path={`${path}/uploadfiles`}>
+                  <UploadFiles />
+                </Route>
+                <Route exact path={`${path}/heatmap`}>
+                  <Heatmap />
+                </Route>
+              </Switch>
+              <Box pt={4}>
+                <Copyright />
+              </Box>
+            </Container>
+          </main>
+        </Route>
+        <Route path="/dashboard" component={() => <h1>Does not exist</h1>} />
+      </Switch>
     </div>
   );
 };

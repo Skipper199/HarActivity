@@ -85,7 +85,7 @@ const App = () => {
   return (
     <div>
       <Switch>
-        <Route path="/signup">
+        <Route exact path="/signup">
           {user === null ? (
             <Signup
               username={username}
@@ -101,7 +101,7 @@ const App = () => {
             <Redirect to="/dashboard" />
           )}
         </Route>
-        <Route path="/login">
+        <Route exact path="/login">
           {user === null ? (
             <Login
               username={username}
