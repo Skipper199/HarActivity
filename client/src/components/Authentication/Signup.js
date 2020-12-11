@@ -11,8 +11,10 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Alert from '@material-ui/lab/Alert';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import { makeStyles } from '@material-ui/core/styles';
+import InfoIcon from '@material-ui/icons/Info';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const Copyright = () => {
   return (
@@ -67,7 +69,6 @@ const Signup = ({
   errorMessage,
 }) => {
   const classes = useStyles();
-
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />
@@ -123,11 +124,19 @@ const Signup = ({
                     autoComplete="current-password"
                     value={password}
                     onChange={handlePasswordChange}
-                  />
-                  <FormHelperText id="component-helper-text">
-                    Password must be at least 8 characters long, contain at
-                    least an upper case letter, a number and a symbol.
-                  </FormHelperText>
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <Tooltip
+                            title="Password: must be at least 8 characters long, contain at
+                                  least an upper case letter, a number and a symbol."
+                          >
+                            <InfoIcon />
+                          </Tooltip>
+                        </InputAdornment>
+                      ),
+                    }}
+                  ></TextField>
                 </Grid>
               </Grid>
               {/* If the error exists show it */}
