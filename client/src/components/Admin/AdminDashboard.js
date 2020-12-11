@@ -18,9 +18,13 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import Tooltip from '@material-ui/core/Tooltip';
-
 import Footer from '../Footer';
 import Error404 from '../Error404';
+import ListItems from './ListItems';
+import GeneralInfo from './GeneralInfo';
+import ResponseTime from './ResponseTime';
+import HTTPHeaders from './HTTPHeaders';
+import FlowMap from './FlowMap';
 
 import {
   Switch,
@@ -30,7 +34,6 @@ import {
   Redirect,
   Router,
 } from 'react-router-dom';
-
 
 const drawerWidth = 240;
 
@@ -97,6 +100,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     height: '100vh',
     overflow: 'auto',
+    backgroundColor: '#212121',
   },
   container: {
     paddingTop: theme.spacing(4),
@@ -139,15 +143,17 @@ const AdminDashboard = ({ admin }) => {
           exact
           path={[
             `${path}/`,
-            `${path}/profile`,
-            `${path}/uploadfiles`,
-            `${path}/heatmap`,
+            `${path}/generalinfo`,
+            `${path}/responsetime`,
+            `${path}/httpheaders`,
+            `${path}/flowmap`,
           ]}
         >
           <CssBaseline />
           <AppBar
             position="absolute"
             className={clsx(classes.appBar, open && classes.appBarShift)}
+            color="inherit"
           >
             <Toolbar className={classes.toolbar}>
               <IconButton
@@ -197,6 +203,7 @@ const AdminDashboard = ({ admin }) => {
             </div>
             <Divider />
             <List>
+              <ListItems />
             </List>
           </Drawer>
           <main className={classes.content}>
@@ -206,16 +213,19 @@ const AdminDashboard = ({ admin }) => {
                 <Route
                   exact
                   path="/admin"
-                  component={() => <Redirect to="/admin/profile" />}
+                  component={() => <Redirect to="/admin/generalinfo" />}
                 />
-                <Route exact path={`${path}/profile`}>
-                  
+                <Route exact path={`${path}/generalinfo`}>
+                  <GeneralInfo />
                 </Route>
-                <Route exact path={`${path}/uploadfiles`}>
-                  
+                <Route exact path={`${path}/responsetime`}>
+                  <ResponseTime />
                 </Route>
-                <Route exact path={`${path}/heatmap`}>
-                  
+                <Route exact path={`${path}/httpheaders`}>
+                  <HTTPHeaders />
+                </Route>
+                <Route exact path={`${path}/flowmap`}>
+                  <FlowMap />
                 </Route>
               </Switch>
               <Box pt={4}>

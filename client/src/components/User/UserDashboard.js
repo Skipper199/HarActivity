@@ -52,6 +52,7 @@ const useStyles = makeStyles((theme) => ({
     ...theme.mixins.toolbar,
   },
   appBar: {
+    backgroundColor: '#333333',
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
@@ -76,6 +77,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   drawerPaper: {
+    backgroundColor: '#373737',
     position: 'relative',
     whiteSpace: 'nowrap',
     width: drawerWidth,
@@ -100,6 +102,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     height: '100vh',
     overflow: 'auto',
+    backgroundColor: '#212121',
   },
   container: {
     paddingTop: theme.spacing(4),
@@ -151,6 +154,7 @@ const UserDashboard = ({ user }) => {
           <AppBar
             position="absolute"
             className={clsx(classes.appBar, open && classes.appBarShift)}
+            color="inherit"
           >
             <Toolbar className={classes.toolbar}>
               <IconButton

@@ -16,7 +16,7 @@ const dark = createMuiTheme({
 });
 
 ReactDOM.render(
-  <ThemeProvider theme={dark}>
+  <ThemeProvider theme={darkTheme}>
     <Router>
       <App />
     </Router>
