@@ -1,0 +1,29 @@
+const jwt = require('jsonwebtoken');
+const updateProfileRouter = require('express').Router();
+const User = require('../models/user');
+
+const getTokenFrom = (request) => {
+  const authorization = request.get('authorization');
+  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+    return authorization.substring(7);
+  }
+  return null;
+};
+
+// Handle update username request
+updateProfileRouter.put('/', async (request, response) => {
+  const { body } = request;
+  const token = getTokenFrom(request);
+
+  const username = { username: body.username };
+  const decodedToken = jwt.verify(token, process.env.SECRET);
+
+  // Return error if token is missing or invalid
+  if (!token || !decodedToken.id) {
+    return response.status(401).json({ error: 'Token missing or invalid' });
+  }
+  await User.findByIdAndUpdate(decodedToken.id, username, { new: true });
+  response.status(200).send({ username: username.username });
+});
+
+module.exports = updateProfileRouter;

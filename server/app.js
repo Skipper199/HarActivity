@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const singupRouter = require('./controllers/singup');
 const loginRouter = require('./controllers/login');
+const updateUsernameRouter = require('./controllers/updateUsername');
+const updatePasswordRouter = require('./controllers/updatePassword');
 const logger = require('./utils/logger');
 const config = require('./utils/config');
 const middleware = require('./utils/middleware');
@@ -25,6 +27,7 @@ mongoose
 
 // Remove deprecation warning
 mongoose.set('useCreateIndex', true);
+mongoose.set('useFindAndModify', false);
 
 app.use(cors()); // Handle requests from different ports
 app.use(express.static('build')); // Handle static file (react build)
@@ -33,6 +36,8 @@ app.use(bodyParser.json()); // Handle request body
 // Handle requests to different routes
 app.use('/signup', singupRouter);
 app.use('/login', loginRouter);
+app.use('/update/username', updateUsernameRouter);
+app.use('/update/password', updatePasswordRouter);
 
 // Handle errors
 app.use(middleware.unknownEndpoint);

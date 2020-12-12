@@ -4,7 +4,7 @@ const PasswordValidator = require('password-validator');
 const User = require('../models/user');
 
 // Handle signup request
-singupRouter.post('/', async (request, response) => {
+singupRouter.post('/', async (request, response, next) => {
   const { body } = request;
 
   // Set rules for password
@@ -28,44 +28,34 @@ singupRouter.post('/', async (request, response) => {
     isAdmin: false,
   });
 
+  // Checks for password errors
+  if (validatePassword.includes('min')) {
+    return response.status(401).json({
+      error: 'Password should be at least 8 characters long.',
+    });
+  }
+  if (validatePassword.includes('uppercase')) {
+    return response.status(401).json({
+      error: 'Password should contain at least one uppercase letter.',
+    });
+  }
+  if (validatePassword.includes('digits')) {
+    return response.status(401).json({
+      error: 'Password should contain at least one digit.',
+    });
+  }
+  if (validatePassword.includes('symbols')) {
+    return response.status(401).json({
+      error: 'Password should contain at least one symbol.',
+    });
+  }
+
   // Saves the user and handles possible errors
   try {
-    // Checks for password errors
-    if (validatePassword.includes('min')) {
-      return response.status(401).json({
-        error: 'Password should be at least 8 characters long.',
-      });
-    }
-    if (validatePassword.includes('uppercase')) {
-      return response.status(401).json({
-        error: 'Password should contain at least one uppercase letter.',
-      });
-    }
-    if (validatePassword.includes('digits')) {
-      return response.status(401).json({
-        error: 'Password should contain at least one digit.',
-      });
-    }
-    if (validatePassword.includes('symbols')) {
-      return response.status(401).json({
-        error: 'Password should contain at least one symbol.',
-      });
-    }
     const savedUser = await user.save();
     response.json(savedUser);
-  } catch (exception) {
-    // Checks for duplicate entries
-    if (exception.errors.username) {
-      return response.status(401).json({
-        error: 'Usename already in use.',
-      });
-    }
-
-    if (exception.errors.email) {
-      return response.status(401).json({
-        error: 'Email already in use.',
-      });
-    }
+  } catch (error) {
+    next(error);
   }
 });
 
