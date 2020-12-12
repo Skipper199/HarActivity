@@ -20,6 +20,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import Tooltip from '@material-ui/core/Tooltip';
 
 import ListItems from './ListItems';
+
 import Footer from '../Footer';
 import Error404 from '../Error404';
 
@@ -35,7 +36,7 @@ import Profile from './Profile';
 import UploadFiles from './UploadFiles';
 import Heatmap from './Heatmap';
 
-const drawerWidth = 240;
+const drawerWidth = 230;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -209,6 +210,7 @@ const UserDashboard = ({ user }) => {
           </Drawer>
           <main className={classes.content}>
             <div className={classes.appBarSpacer} />
+
             <Container maxWidth="lg" className={classes.container}>
               <Switch>
                 <Route
