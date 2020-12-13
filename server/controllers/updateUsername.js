@@ -15,15 +15,15 @@ updateProfileRouter.put('/', async (request, response) => {
   const { body } = request;
   const token = getTokenFrom(request);
 
-  const username = { username: body.username };
+  const newUsername = { username: body.username };
   const decodedToken = jwt.verify(token, process.env.SECRET);
 
   // Return error if token is missing or invalid
   if (!token || !decodedToken.id) {
     return response.status(401).json({ error: 'Token missing or invalid' });
   }
-  await User.findByIdAndUpdate(decodedToken.id, username, { new: true });
-  response.status(200).send({ username: username.username });
+  await User.findByIdAndUpdate(decodedToken.id, newUsername, { new: true });
+  return response.status(200).send({ newUsername: newUsername.username });
 });
 
 module.exports = updateProfileRouter;

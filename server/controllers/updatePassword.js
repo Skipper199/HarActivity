@@ -20,13 +20,13 @@ updatePasswordRouter.put('/', async (request, response) => {
   const { oldPassword } = body;
   const decodedToken = jwt.verify(token, process.env.SECRET);
 
-  // Find user by token
-  const user = await User.findById(decodedToken.id);
-
   // Return error if token is missing or invalid
   if (!token || !decodedToken.id) {
     return response.status(401).json({ error: 'Token missing or invalid' });
   }
+
+  // Find user by token
+  const user = await User.findById(decodedToken.id);
 
   // Check if the old password is correct
   const passwordCorrect =
