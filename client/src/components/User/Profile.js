@@ -92,13 +92,19 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
   },
   fixedHeight: {
-    height: 250,
+    height: 270,
   },
 }));
 
-const Profile = () => {
+const Profile = ({
+  user,
+  newUsername,
+  handleUsernameSubmit,
+  handleNewUsernameChange,
+}) => {
   const classes = useStyles();
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+
   return (
     <div>
       <Container maxWidth="lg" className={classes.container}>
@@ -116,30 +122,38 @@ const Profile = () => {
                   Change Username
                 </Typography>
               </Box>
-              <Grid container alignItems="center">
-                <Box mt={1} mr={0} mb={1} ml={1}>
-                  <TextField
-                    variant="outlined"
-                    style={{ width: 175 }}
-                    size="small"
-                    color="primary"
-                    name="usernameChange"
-                    label="New Username"
-                    id="usernameChange"
-                  />
-                </Box>
-                <Box padding={1}>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    size="small"
-                    color="primary"
-                    style={{ width: 75, height: 30 }}
-                  >
-                    Update
-                  </Button>
-                </Box>
-              </Grid>
+              <form
+                onSubmit={handleUsernameSubmit}
+                className={classes.form}
+                noValidate
+              >
+                <Grid container alignItems="center">
+                  <Box mt={1} mr={0} mb={1} ml={1}>
+                    <TextField
+                      variant="outlined"
+                      style={{ width: 175 }}
+                      size="small"
+                      color="primary"
+                      name="usernameChange"
+                      label="New Username"
+                      id="usernameChange"
+                      value={newUsername}
+                      onChange={handleNewUsernameChange}
+                    />
+                  </Box>
+                  <Box margin={2.5}>
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      size="small"
+                      color="primary"
+                      style={{ width: 75, height: 30 }}
+                    >
+                      Update
+                    </Button>
+                  </Box>
+                </Grid>
+              </form>
               <Box paddingTop={3} paddingLeft={1}>
                 <Typography component="p" variant="h5">
                   Change Password
@@ -166,11 +180,11 @@ const Profile = () => {
                     size="small"
                     color="primary"
                     name="newPassword"
-                    label="Password"
+                    label="New Password"
                     id="newPassword"
                   />
                 </Box>
-                <Box padding={1}>
+                <Box margin={2.5}>
                   <Button
                     type="submit"
                     variant="contained"

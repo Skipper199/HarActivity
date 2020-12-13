@@ -53,7 +53,7 @@ singupRouter.post('/', async (request, response, next) => {
   // Saves the user and handles possible errors
   try {
     const savedUser = await user.save();
-    response.json(savedUser);
+    return response.json(savedUser);
   } catch (error) {
     next(error);
   }

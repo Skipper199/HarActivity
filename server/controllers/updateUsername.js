@@ -11,19 +11,24 @@ const getTokenFrom = (request) => {
 };
 
 // Handle update username request
-updateProfileRouter.put('/', async (request, response) => {
+updateProfileRouter.put('/', async (request, response, next) => {
   const { body } = request;
   const token = getTokenFrom(request);
 
-  const newUsername = { username: body.username };
+  const newUsername = { username: body.newUsername };
   const decodedToken = jwt.verify(token, process.env.SECRET);
 
   // Return error if token is missing or invalid
   if (!token || !decodedToken.id) {
     return response.status(401).json({ error: 'Token missing or invalid' });
   }
-  await User.findByIdAndUpdate(decodedToken.id, newUsername, { new: true });
-  return response.status(200).send({ newUsername: newUsername.username });
+
+  try {
+    await User.findByIdAndUpdate(decodedToken.id, newUsername, { new: true });
+    return response.status(200).send({ newUsername: newUsername.username });
+  } catch (error) {
+    next(error);
+  }
 });
 
 module.exports = updateProfileRouter;

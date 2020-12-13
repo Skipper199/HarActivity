@@ -120,7 +120,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const UserDashboard = ({ user }) => {
+const UserDashboard = ({
+  user,
+  newUsername,
+  handleUsernameSubmit,
+  handleNewUsernameChange,
+}) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {
@@ -135,10 +140,8 @@ const UserDashboard = ({ user }) => {
     window.localStorage.removeItem('loggedUser');
   };
 
-  //const history = useHistory();
-
   let { path } = useRouteMatch();
-  //history.push(`${path}/profile`);
+
   return (
     <div className={classes.root}>
       <Switch>
@@ -216,13 +219,18 @@ const UserDashboard = ({ user }) => {
                 <Route
                   exact
                   path="/user"
-                  component={() => <Redirect to="/user/profile" />}
+                  component={() => <Redirect to="/user/uploadfiles" />}
                 />
-                <Route exact path={`${path}/profile`}>
-                  <Profile />
-                </Route>
                 <Route exact path={`${path}/uploadfiles`}>
                   <UploadFiles />
+                </Route>
+                <Route exact path={`${path}/profile`}>
+                  <Profile
+                    user={user}
+                    newUsername={newUsername}
+                    handleUsernameSubmit={handleUsernameSubmit}
+                    handleNewUsernameChange={handleNewUsernameChange}
+                  />
                 </Route>
                 <Route exact path={`${path}/heatmap`}>
                   <Heatmap />

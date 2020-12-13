@@ -5,6 +5,7 @@ import UserDashboard from './components/User/UserDashboard';
 import AdminDashboard from './components/Admin/AdminDashboard';
 import loginService from './services/login';
 import signupService from './services/signup';
+import profileService from './services/profile';
 import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
 
 import Error404 from './components/Error404';
@@ -14,6 +15,7 @@ const App = () => {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [newUsername, setNewUsername] = useState('');
 
   // Checks if user is logged in
   const checkLoggedUser = () => {
@@ -87,6 +89,28 @@ const App = () => {
     }
   };
 
+  const handleUpdateUsername = async (event) => {
+    event.preventDefault();
+    try {
+      console.log(newUsername);
+      const newUsernameObj = await profileService.username(user.token, {
+        newUsername: newUsername,
+      });
+      const newUser = {
+        email: user.email,
+        isAdmin: user.isAdmin,
+        token: user.token,
+        username: newUsernameObj.newUsername,
+      };
+      setUser(newUser);
+      window.localStorage.setItem('loggedUser', JSON.stringify(newUser));
+      setNewUsername('');
+    } catch (exception) {
+      setNewUsername('');
+      console.log(exception);
+    }
+  };
+
   return (
     <div>
       {isLoggedIn ? (
@@ -109,7 +133,14 @@ const App = () => {
           ) : (
             <Switch>
               <Route path={'/user'}>
-                <UserDashboard user={user} />
+                <UserDashboard
+                  user={user}
+                  newUsername={newUsername}
+                  handleUsernameSubmit={handleUpdateUsername}
+                  handleNewUsernameChange={({ target }) =>
+                    setNewUsername(target.value)
+                  }
+                />
               </Route>
               <Route path={'/admin'}>
                 <Redirect to="/user" />
