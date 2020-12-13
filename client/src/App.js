@@ -92,7 +92,6 @@ const App = () => {
   const handleUpdateUsername = async (event) => {
     event.preventDefault();
     try {
-      console.log(newUsername);
       const newUsernameObj = await profileService.username(user.token, {
         newUsername: newUsername,
       });
@@ -105,9 +104,10 @@ const App = () => {
       setUser(newUser);
       window.localStorage.setItem('loggedUser', JSON.stringify(newUser));
       setNewUsername('');
+      setErrorMessage(null);
     } catch (exception) {
       setNewUsername('');
-      console.log(exception);
+      setErrorMessage(exception.response.data.error);
     }
   };
 
@@ -140,6 +140,7 @@ const App = () => {
                   handleNewUsernameChange={({ target }) =>
                     setNewUsername(target.value)
                   }
+                  errorMessage={errorMessage}
                 />
               </Route>
               <Route path={'/admin'}>

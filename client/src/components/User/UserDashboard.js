@@ -125,6 +125,7 @@ const UserDashboard = ({
   newUsername,
   handleUsernameSubmit,
   handleNewUsernameChange,
+  errorMessage,
 }) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
@@ -230,6 +231,7 @@ const UserDashboard = ({
                     newUsername={newUsername}
                     handleUsernameSubmit={handleUsernameSubmit}
                     handleNewUsernameChange={handleNewUsernameChange}
+                    errorMessage={errorMessage}
                   />
                 </Route>
                 <Route exact path={`${path}/heatmap`}>

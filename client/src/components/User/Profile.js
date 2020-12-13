@@ -12,6 +12,7 @@ import Table from '@material-ui/core/Table';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Alert from '@material-ui/lab/Alert';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -87,12 +88,8 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     padding: theme.spacing(2),
-    display: 'flex',
     overflow: 'auto',
     flexDirection: 'column',
-  },
-  fixedHeight: {
-    height: 270,
   },
 }));
 
@@ -101,9 +98,10 @@ const Profile = ({
   newUsername,
   handleUsernameSubmit,
   handleNewUsernameChange,
+  errorMessage,
 }) => {
   const classes = useStyles();
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+  const fixedHeightPaper = clsx(classes.paper);
 
   return (
     <div>
@@ -154,6 +152,20 @@ const Profile = ({
                   </Box>
                 </Grid>
               </form>
+              {errorMessage === null ? (
+                <></>
+              ) : (
+                <Box ml={1}>
+                  <br></br>
+                  <Alert
+                    variant="outlined"
+                    style={{ width: 230 }}
+                    severity="error"
+                  >
+                    {errorMessage}
+                  </Alert>
+                </Box>
+              )}
               <Box paddingTop={3} paddingLeft={1}>
                 <Typography component="p" variant="h5">
                   Change Password

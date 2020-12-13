@@ -21,12 +21,15 @@ const errorHandler = (error, request, response, next) => {
   if (error.name === 'CastError' && error.kind === 'ObjectId') {
     return response.status(400).send({ error: 'malformatted id' });
   }
-  if (error.errors.username) {
+  if (
+    (error.name === 'MongoError' && error.codeName === 'DuplicateKey') ||
+    (error.name === 'ValidationError' && error.errors.username)
+  ) {
     return response.status(401).json({
       error: 'Usename already in use.',
     });
   }
-  if (error.errors.email) {
+  if (error.name === 'ValidationError' && error.errors.email) {
     return response.status(401).json({
       error: 'Email already in use.',
     });
