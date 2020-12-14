@@ -76,7 +76,7 @@ const Signup = ({
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <TextField
-                    autoComplete="username"
+                    autoComplete="off"
                     name="username"
                     variant="outlined"
                     required
@@ -96,7 +96,7 @@ const Signup = ({
                     id="email"
                     label="Email Address"
                     name="email"
-                    autoComplete="email"
+                    autoComplete="off"
                     value={email}
                     onChange={handleEmailChange}
                   />
@@ -110,7 +110,7 @@ const Signup = ({
                     label="Password"
                     type="password"
                     id="password"
-                    autoComplete="current-password"
+                    autoComplete="off"
                     value={password}
                     onChange={handlePasswordChange}
                     InputProps={{

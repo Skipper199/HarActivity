@@ -6,12 +6,12 @@ const userSchema = mongoose.Schema({
   username: {
     type: String,
     unique: true,
-    required: true,
+    required: [true, 'Username cannot be empty.'],
   },
   email: {
     type: String,
     unique: true,
-    required: true,
+    required: [true, 'Email cannot be empty.'],
   },
   passwordHash: {
     type: String,

@@ -72,7 +72,7 @@ const Login = ({
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <TextField
-                    autoComplete="username"
+                    autoComplete="off"
                     name="username"
                     variant="outlined"
                     required
@@ -93,7 +93,7 @@ const Login = ({
                     label="Password"
                     type="password"
                     id="password"
-                    autoComplete="current-password"
+                    autoComplete="off"
                     value={password}
                     onChange={handlePasswordChange}
                   />

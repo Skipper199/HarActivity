@@ -21,21 +21,37 @@ const errorHandler = (error, request, response, next) => {
   if (error.name === 'CastError' && error.kind === 'ObjectId') {
     return response.status(400).send({ error: 'malformatted id' });
   }
-  if (
-    (error.name === 'MongoError' && error.codeName === 'DuplicateKey') ||
-    (error.name === 'ValidationError' && error.errors.username)
-  ) {
-    return response.status(401).json({
-      error: 'Usename already in use.',
-    });
+  // Sign Up Username errors
+  if (error.name === 'ValidationError' && error.errors.username) {
+    if (error.errors.username.kind === 'unique') {
+      return response.status(401).json({
+        error: 'Username already in use.',
+      });
+    }
+    if (error.errors.username.kind === 'required') {
+      return response.status(401).json({
+        error: error.errors.username.message,
+      });
+    }
   }
+  // Sign Up Email errors
   if (error.name === 'ValidationError' && error.errors.email) {
-    return response.status(401).json({
-      error: 'Email already in use.',
-    });
+    if (error.errors.email.kind === 'unique') {
+      return response.status(401).json({
+        error: 'Email already in use.',
+      });
+    }
+    if (error.errors.email.kind === 'required') {
+      return response.status(401).json({
+        error: error.errors.email.message,
+      });
+    }
   }
-  if (error.name === 'ValidationError') {
-    return response.status(400).json({ error: error.message });
+  // Update Username errors (from Profile Settings)
+  if (error.name === 'MongoError' && error.codeName === 'DuplicateKey') {
+    return response.status(401).json({
+      error: 'Username already in use.',
+    });
   }
   if (error.name === 'JsonWebTokenError') {
     return response.status(401).json({ error: 'invalid token' });

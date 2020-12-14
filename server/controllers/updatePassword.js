@@ -28,6 +28,12 @@ updatePasswordRouter.put('/', async (request, response) => {
   // Find user by token
   const user = await User.findById(decodedToken.id);
 
+  if (oldPassword === '') {
+    return response.status(401).json({
+      error: 'The above fields are required',
+    });
+  }
+
   // Check if the old password is correct
   const passwordCorrect =
     user === null ? false : await bcrypt.compare(oldPassword, user.passwordHash);

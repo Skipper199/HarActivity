@@ -92,7 +92,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
   },
   helperTextSuccess: {
-    color: 'green',
+    color: '#7EE16F',
     position: 'absolute',
     right: '-42px',
     top: '40px',

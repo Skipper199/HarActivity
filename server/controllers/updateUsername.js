@@ -26,6 +26,8 @@ updateProfileRouter.put('/', async (request, response, next) => {
   try {
     await User.findByIdAndUpdate(decodedToken.id, newUsernameObj, {
       new: true,
+      runValidators: true,
+      context: 'query',
     });
     return response.status(200).send({ newUsername: newUsernameObj.username });
   } catch (error) {
