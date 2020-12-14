@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -12,7 +12,7 @@ import Table from '@material-ui/core/Table';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Alert from '@material-ui/lab/Alert';
+import profileService from '../../services/profile';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -91,6 +91,26 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'auto',
     flexDirection: 'column',
   },
+  helperTextSuccess: {
+    color: 'green',
+    position: 'absolute',
+    right: '-42px',
+    top: '40px',
+    width: '200px',
+  },
+  helperTextError: {
+    position: 'absolute',
+    right: '-42px',
+    top: '40px',
+    width: '200px',
+  },
+  passwordHelperTextError: {
+    position: 'absolute',
+    right: '-42px',
+    top: '40px',
+    left: '-11px',
+    width: '350px',
+  },
 }));
 
 const Profile = ({
@@ -99,9 +119,42 @@ const Profile = ({
   handleUsernameSubmit,
   handleNewUsernameChange,
   errorMessage,
+  correctEntry,
+  helperText,
 }) => {
   const classes = useStyles();
   const fixedHeightPaper = clsx(classes.paper);
+  const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [correctPasswordEntry, setCorrectPasswordEntry] = useState(false);
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState(null);
+  const [passwordHelperText, setPasswordHelperText] = useState(null);
+
+  const deletePasswordMessage = () => {
+    setPasswordHelperText(null);
+    setPasswordErrorMessage(null);
+  };
+
+  const handleUpdatePassword = async (event) => {
+    event.preventDefault();
+    try {
+      await profileService.password(user.token, {
+        oldPassword: oldPassword,
+        newPassword: newPassword,
+      });
+      setOldPassword('');
+      setNewPassword('');
+      setPasswordErrorMessage(null);
+      setCorrectPasswordEntry(true);
+      setPasswordHelperText('Password updated successfully');
+      setTimeout(deletePasswordMessage, 5000);
+    } catch (exception) {
+      setPasswordErrorMessage(exception.response.data.error);
+      setOldPassword('');
+      setNewPassword('');
+      setTimeout(deletePasswordMessage, 5000);
+    }
+  };
 
   return (
     <div>
@@ -128,6 +181,8 @@ const Profile = ({
                 <Grid container alignItems="center">
                   <Box mt={1} mr={0} mb={1} ml={1}>
                     <TextField
+                      autoComplete="off"
+                      error={errorMessage === null ? false : true}
                       variant="outlined"
                       style={{ width: 175 }}
                       size="small"
@@ -136,7 +191,18 @@ const Profile = ({
                       label="New Username"
                       id="usernameChange"
                       value={newUsername}
+                      helperText={
+                        errorMessage === null && correctEntry
+                          ? helperText
+                          : errorMessage
+                      }
                       onChange={handleNewUsernameChange}
+                      FormHelperTextProps={{
+                        className:
+                          errorMessage === null && correctEntry
+                            ? classes.helperTextSuccess
+                            : classes.helperTextError,
+                      }}
                     />
                   </Box>
                   <Box margin={2.5}>
@@ -152,62 +218,78 @@ const Profile = ({
                   </Box>
                 </Grid>
               </form>
-              {errorMessage === null ? (
-                <></>
-              ) : (
-                <Box ml={1}>
-                  <br></br>
-                  <Alert
-                    variant="outlined"
-                    style={{ width: 230 }}
-                    severity="error"
-                  >
-                    {errorMessage}
-                  </Alert>
-                </Box>
-              )}
-              <Box paddingTop={3} paddingLeft={1}>
+
+              <Box marginTop={3} paddingLeft={1}>
                 <Typography component="p" variant="h5">
                   Change Password
                 </Typography>
               </Box>
-              <Grid container alignItems="center">
-                <Box mt={1} mr={1.5} mb={1} ml={1}>
-                  <TextField
-                    type="password"
-                    variant="outlined"
-                    style={{ width: 175 }}
-                    size="small"
-                    color="primary"
-                    name="oldPassword"
-                    label="Old Password"
-                    id="oldPassword"
-                  />
-                </Box>
-                <Box mt={1} mr={0} mb={1} ml={1}>
-                  <TextField
-                    type="password"
-                    variant="outlined"
-                    style={{ width: 175 }}
-                    size="small"
-                    color="primary"
-                    name="newPassword"
-                    label="New Password"
-                    id="newPassword"
-                  />
-                </Box>
-                <Box margin={2.5}>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    size="small"
-                    color="primary"
-                    style={{ width: 75, height: 30 }}
-                  >
-                    Update
-                  </Button>
-                </Box>
-              </Grid>
+              <form
+                onSubmit={handleUpdatePassword}
+                className={classes.form}
+                noValidate
+              >
+                <Grid container alignItems="center">
+                  <Box mt={1} mr={1.5} mb={1} ml={1}>
+                    <TextField
+                      error={passwordErrorMessage === null ? false : true}
+                      type="password"
+                      variant="outlined"
+                      style={{ width: 175 }}
+                      size="small"
+                      color="primary"
+                      name="oldPassword"
+                      label="Old Password"
+                      id="oldPassword"
+                      value={oldPassword}
+                      helperText={
+                        passwordErrorMessage === null && correctPasswordEntry
+                          ? passwordHelperText
+                          : passwordErrorMessage
+                      }
+                      onChange={({ target }) => setOldPassword(target.value)}
+                      FormHelperTextProps={{
+                        className:
+                          passwordErrorMessage === null && correctPasswordEntry
+                            ? classes.helperTextSuccess
+                            : classes.passwordHelperTextError,
+                      }}
+                    />
+                  </Box>
+                  <Box mt={1} mr={0} mb={1} ml={1}>
+                    <TextField
+                      error={passwordErrorMessage === null ? false : true}
+                      type="password"
+                      variant="outlined"
+                      style={{ width: 175 }}
+                      size="small"
+                      color="primary"
+                      name="newPassword"
+                      label="New Password"
+                      id="newPassword"
+                      value={newPassword}
+                      onChange={({ target }) => setNewPassword(target.value)}
+                      FormHelperTextProps={{
+                        className:
+                          passwordErrorMessage === null && correctPasswordEntry
+                            ? classes.helperTextSuccess
+                            : classes.helperTextError,
+                      }}
+                    />
+                  </Box>
+                  <Box margin={2.5}>
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      size="small"
+                      color="primary"
+                      style={{ width: 75, height: 30 }}
+                    >
+                      Update
+                    </Button>
+                  </Box>
+                </Grid>
+              </form>
             </Paper>
           </Grid>
           {/* Recent Uploaded Files */}

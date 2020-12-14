@@ -16,6 +16,7 @@ const App = () => {
   const [email, setEmail] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [newUsername, setNewUsername] = useState('');
+  const [correctEntry, setCorrectEntry] = useState(false);
 
   // Checks if user is logged in
   const checkLoggedUser = () => {
@@ -31,8 +32,15 @@ const App = () => {
 
   const [user, setUser] = useState(checkLoggedUser);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [helperText, setHelperText] = useState(null);
 
   const history = useHistory();
+
+  //Deletes messages for Change Username
+  const deleteMessage = () => {
+    setHelperText(null);
+    setErrorMessage(null);
+  };
 
   // Log in user and store the returned token
   const handleLogin = async (event) => {
@@ -48,6 +56,7 @@ const App = () => {
       setUser(user);
       setIsLoggedIn(true);
       user.isAdmin ? history.push('/admin') : history.push('/user');
+      setErrorMessage(null);
     } catch (exception) {
       // Empties fields
       setUsername('');
@@ -78,6 +87,7 @@ const App = () => {
       setUser(user);
       setIsLoggedIn(true);
       user.isAdmin ? history.push('/admin') : history.push('/user');
+      setErrorMessage(null);
     } catch (exception) {
       // Empties fields
       setUsername('');
@@ -96,18 +106,19 @@ const App = () => {
         newUsername: newUsername,
       });
       const newUser = {
-        email: user.email,
-        isAdmin: user.isAdmin,
-        token: user.token,
+        ...user,
         username: newUsernameObj.newUsername,
       };
       setUser(newUser);
       window.localStorage.setItem('loggedUser', JSON.stringify(newUser));
       setNewUsername('');
       setErrorMessage(null);
+      setCorrectEntry(true);
+      setHelperText('Username updated successfully');
+      setTimeout(deleteMessage, 5000);
     } catch (exception) {
-      setNewUsername('');
       setErrorMessage(exception.response.data.error);
+      setTimeout(deleteMessage, 5000);
     }
   };
 
@@ -141,6 +152,8 @@ const App = () => {
                     setNewUsername(target.value)
                   }
                   errorMessage={errorMessage}
+                  correctEntry={correctEntry}
+                  helperText={helperText}
                 />
               </Route>
               <Route path={'/admin'}>

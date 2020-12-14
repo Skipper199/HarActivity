@@ -51,22 +51,22 @@ updatePasswordRouter.put('/', async (request, response) => {
   // Checks for password errors and return the appropiate error
   if (validatePassword.includes('min')) {
     return response.status(401).json({
-      error: 'Password should be at least 8 characters long.',
+      error: 'New password should be at least 8 characters long.',
     });
   }
   if (validatePassword.includes('uppercase')) {
     return response.status(401).json({
-      error: 'Password should contain at least one uppercase letter.',
+      error: 'New password should contain at least one uppercase letter.',
     });
   }
   if (validatePassword.includes('digits')) {
     return response.status(401).json({
-      error: 'Password should contain at least one digit.',
+      error: 'New password should contain at least one digit.',
     });
   }
   if (validatePassword.includes('symbols')) {
     return response.status(401).json({
-      error: 'Password should contain at least one symbol.',
+      error: 'New password should contain at least one symbol.',
     });
   }
 
@@ -78,7 +78,9 @@ updatePasswordRouter.put('/', async (request, response) => {
 
   // Replace old hash with the new hash password
   await User.findByIdAndUpdate(decodedToken.id, passwordHashObj, { new: true });
-  return response.status(200).send({ message: 'Password updated successfully' });
+  return response.status(200).send({
+    message: 'Password updated successfully',
+  });
 });
 
 module.exports = updatePasswordRouter;

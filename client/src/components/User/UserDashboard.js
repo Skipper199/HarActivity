@@ -125,6 +125,13 @@ const UserDashboard = ({
   newUsername,
   handleUsernameSubmit,
   handleNewUsernameChange,
+  oldPassword,
+  newPassword,
+  handlePasswordSubmit,
+  handleNewPasswordChange,
+  handleOldPasswordChange,
+  correctEntry,
+  helperText,
   errorMessage,
 }) => {
   const classes = useStyles();
@@ -231,7 +238,14 @@ const UserDashboard = ({
                     newUsername={newUsername}
                     handleUsernameSubmit={handleUsernameSubmit}
                     handleNewUsernameChange={handleNewUsernameChange}
+                    oldPassword={oldPassword}
+                    newPassword={newPassword}
+                    handlePasswordSubmit={handlePasswordSubmit}
+                    handleOldPasswordChange={handleOldPasswordChange}
+                    handleNewPasswordChange={handleNewPasswordChange}
+                    correctEntry={correctEntry}
                     errorMessage={errorMessage}
+                    helperText={helperText}
                   />
                 </Route>
                 <Route exact path={`${path}/heatmap`}>
