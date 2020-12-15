@@ -2,19 +2,10 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import PublishIcon from '@material-ui/icons/Publish';
 import { Box } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+
 import Typography from '@material-ui/core/Typography';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    '& > *': {
-      margin: theme.spacing(1),
-    },
-  },
-  input: {
-    display: 'none',
-  },
-}));
+import useStyles from './style';
 
 const UploadFiles = () => {
   const classes = useStyles();

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -12,129 +13,64 @@ import Table from '@material-ui/core/Table';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import profileService from '../../services/profile';
 
-const drawerWidth = 240;
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-  },
-  toolbar: {
-    paddingRight: 24, // keep right padding when drawer closed
-  },
-  toolbarIcon: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: '0 8px',
-    ...theme.mixins.toolbar,
-  },
-  appBar: {
-    backgroundColor: '#333333',
-    zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-  },
-  appBarShift: {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  menuButton: {
-    marginRight: 36,
-  },
-  menuButtonHidden: {
-    display: 'none',
-  },
-  title: {
-    flexGrow: 1,
-  },
-  drawerPaper: {
-    backgroundColor: '#373737',
-    position: 'relative',
-    whiteSpace: 'nowrap',
-    width: drawerWidth,
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  drawerPaperClose: {
-    overflowX: 'hidden',
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    width: theme.spacing(7),
-    [theme.breakpoints.up('sm')]: {
-      width: theme.spacing(9),
-    },
-  },
-  appBarSpacer: theme.mixins.toolbar,
-  content: {
-    flexGrow: 1,
-    height: '100vh',
-    overflow: 'auto',
-    backgroundColor: '#212121',
-  },
-  container: {
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4),
-  },
-  paper: {
-    padding: theme.spacing(2),
-    overflow: 'auto',
-    flexDirection: 'column',
-  },
-  helperTextSuccess: {
-    color: '#7EE16F',
-    position: 'absolute',
-    right: '-42px',
-    top: '40px',
-    width: '200px',
-  },
-  helperTextError: {
-    position: 'absolute',
-    right: '-42px',
-    top: '40px',
-    width: '200px',
-  },
-  passwordHelperTextError: {
-    position: 'absolute',
-    right: '-42px',
-    top: '40px',
-    left: '-11px',
-    width: '350px',
-  },
-}));
+import profileService from '../../../../services/profile';
+import useStyles from './style';
 
-const Profile = ({
-  user,
-  newUsername,
-  handleUsernameSubmit,
-  handleNewUsernameChange,
-  errorMessage,
-  correctEntry,
-  helperText,
-}) => {
+const Profile = ({ setUsername }) => {
   const classes = useStyles();
   const fixedHeightPaper = clsx(classes.paper);
+
+  const user = useSelector((state) => state.user);
+
+  // useState for username update form
+  const [newUsername, setNewUsername] = useState('');
+  const [usernameErrorMessage, setUsernameErrorMessage] = useState('');
+  const [correctUsernameEntry, setCorrectUsernameEntry] = useState(false);
+  const [usernameHelperText, setUsernameHelperText] = useState('');
+
+  // useState for password update form
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [correctPasswordEntry, setCorrectPasswordEntry] = useState(false);
-  const [passwordErrorMessage, setPasswordErrorMessage] = useState(null);
-  const [passwordHelperText, setPasswordHelperText] = useState(null);
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
+  const [passwordHelperText, setPasswordHelperText] = useState('');
 
-  const deletePasswordMessage = () => {
-    setPasswordHelperText(null);
-    setPasswordErrorMessage(null);
+  const deleteMessage = () => {
+    setUsernameHelperText('');
+    setUsernameErrorMessage('');
+    setPasswordHelperText('');
+    setPasswordErrorMessage('');
   };
 
+  // Handle username update
+  const handleUpdateUsername = async (event) => {
+    event.preventDefault();
+    try {
+      const newUsernameObj = await profileService.username(user.token, {
+        newUsername: newUsername,
+      });
+      const newUser = {
+        ...user,
+        username: newUsernameObj.newUsername,
+      };
+
+      setUsername(newUsernameObj.newUsername);
+      window.localStorage.setItem('loggedUser', JSON.stringify(newUser));
+
+      setNewUsername('');
+      setUsernameErrorMessage('');
+      setCorrectUsernameEntry(true);
+      setUsernameHelperText('Username updated successfully!');
+      setTimeout(deleteMessage, 5000);
+    } catch (exception) {
+      setNewUsername('');
+      setTimeout(deleteMessage, 5000);
+      setUsernameErrorMessage(exception.response.data.error);
+    }
+  };
+
+  // Handle password update
   const handleUpdatePassword = async (event) => {
     event.preventDefault();
     try {
@@ -142,17 +78,18 @@ const Profile = ({
         oldPassword: oldPassword,
         newPassword: newPassword,
       });
+
       setOldPassword('');
       setNewPassword('');
-      setPasswordErrorMessage(null);
+      setPasswordErrorMessage('');
       setCorrectPasswordEntry(true);
       setPasswordHelperText('Password updated successfully');
-      setTimeout(deletePasswordMessage, 5000);
+      setTimeout(deleteMessage, 5000);
     } catch (exception) {
       setPasswordErrorMessage(exception.response.data.error);
       setOldPassword('');
       setNewPassword('');
-      setTimeout(deletePasswordMessage, 5000);
+      setTimeout(deleteMessage, 5000);
     }
   };
 
@@ -174,7 +111,7 @@ const Profile = ({
                 </Typography>
               </Box>
               <form
-                onSubmit={handleUsernameSubmit}
+                onSubmit={handleUpdateUsername}
                 className={classes.form}
                 noValidate
               >
@@ -182,7 +119,7 @@ const Profile = ({
                   <Box mt={1} mr={0} mb={1} ml={1}>
                     <TextField
                       autoComplete="off"
-                      error={errorMessage === null ? false : true}
+                      error={usernameErrorMessage === '' ? false : true}
                       variant="outlined"
                       style={{ width: 175 }}
                       size="small"
@@ -191,15 +128,15 @@ const Profile = ({
                       label="New Username"
                       id="usernameChange"
                       value={newUsername}
+                      onChange={({ target }) => setNewUsername(target.value)}
                       helperText={
-                        errorMessage === null && correctEntry
-                          ? helperText
-                          : errorMessage
+                        usernameErrorMessage === '' && correctUsernameEntry
+                          ? usernameHelperText
+                          : usernameErrorMessage
                       }
-                      onChange={handleNewUsernameChange}
                       FormHelperTextProps={{
                         className:
-                          errorMessage === null && correctEntry
+                          usernameErrorMessage === '' && correctUsernameEntry
                             ? classes.helperTextSuccess
                             : classes.helperTextError,
                       }}
@@ -232,7 +169,7 @@ const Profile = ({
                 <Grid container alignItems="center">
                   <Box mt={1} mr={1.5} mb={1} ml={1}>
                     <TextField
-                      error={passwordErrorMessage === null ? false : true}
+                      error={passwordErrorMessage === '' ? false : true}
                       type="password"
                       variant="outlined"
                       style={{ width: 175 }}
@@ -242,15 +179,15 @@ const Profile = ({
                       label="Old Password"
                       id="oldPassword"
                       value={oldPassword}
+                      onChange={({ target }) => setOldPassword(target.value)}
                       helperText={
-                        passwordErrorMessage === null && correctPasswordEntry
+                        passwordErrorMessage === '' && correctPasswordEntry
                           ? passwordHelperText
                           : passwordErrorMessage
                       }
-                      onChange={({ target }) => setOldPassword(target.value)}
                       FormHelperTextProps={{
                         className:
-                          passwordErrorMessage === null && correctPasswordEntry
+                          passwordErrorMessage === '' && correctPasswordEntry
                             ? classes.helperTextSuccess
                             : classes.passwordHelperTextError,
                       }}
@@ -258,7 +195,7 @@ const Profile = ({
                   </Box>
                   <Box mt={1} mr={0} mb={1} ml={1}>
                     <TextField
-                      error={passwordErrorMessage === null ? false : true}
+                      error={passwordErrorMessage === '' ? false : true}
                       type="password"
                       variant="outlined"
                       style={{ width: 175 }}
@@ -271,7 +208,7 @@ const Profile = ({
                       onChange={({ target }) => setNewPassword(target.value)}
                       FormHelperTextProps={{
                         className:
-                          passwordErrorMessage === null && correctPasswordEntry
+                          passwordErrorMessage === '' && correctPasswordEntry
                             ? classes.helperTextSuccess
                             : classes.helperTextError,
                       }}

@@ -30,7 +30,7 @@ updatePasswordRouter.put('/', async (request, response) => {
 
   if (oldPassword === '') {
     return response.status(401).json({
-      error: 'The above fields are required',
+      error: 'Old password is required.',
     });
   }
 
@@ -41,7 +41,7 @@ updatePasswordRouter.put('/', async (request, response) => {
   // Return error if old password is incorrect
   if (!passwordCorrect) {
     return response.status(401).json({
-      error: 'Old password is incorrect',
+      error: 'Old password is incorrect.',
     });
   }
 
@@ -85,7 +85,7 @@ updatePasswordRouter.put('/', async (request, response) => {
   // Replace old hash with the new hash password
   await User.findByIdAndUpdate(decodedToken.id, passwordHashObj, { new: true });
   return response.status(200).send({
-    message: 'Password updated successfully',
+    message: 'Password updated successfully!',
   });
 });
 
