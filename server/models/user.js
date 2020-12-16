@@ -19,6 +19,12 @@ const userSchema = mongoose.Schema({
   isAdmin: {
     type: Boolean,
   },
+  harFiles: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'HarFile',
+    },
+  ],
 });
 
 // Delete unwanted information
@@ -29,6 +35,7 @@ userSchema.set('toJSON', {
     delete returnedObject.__v;
     delete returnedObject.passwordHash;
     delete returnedObject.isAdmin;
+    delete returnedObject.harFiles;
   },
 });
 
