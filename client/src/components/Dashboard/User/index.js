@@ -20,7 +20,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import Tooltip from '@material-ui/core/Tooltip';
 
 import ListItems from './ListItems/index';
-import UploadFiles from './UploadFiles/index';
+import UploadFiles from './UploadFile/index';
 import Profile from './Profile/index';
 import Heatmap from './Heatmap/index';
 import Error404 from '../../Error404/index';

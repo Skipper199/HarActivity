@@ -38,7 +38,10 @@ uploadRouter.post('/', async (request, response, next) => {
         .get(`https://freegeoip.app/json/${harRequests[i].serverIPAddress}`)
         .then((serverInfo) => {
           // do something with response
-          const serverLoc = [serverInfo.data.latitude, serverInfo.data.longitude];
+          const serverLoc = [
+            serverInfo.data.latitude,
+            serverInfo.data.longitude,
+          ];
           harRequests[i].serverLoc = serverLoc;
         })
     );
