@@ -26,11 +26,11 @@ const UploadFiles = () => {
     const filereader = new FileReader();
     // Reading a file as plain text
     filereader.readAsText(event.target.files[0]);
-
     // Once the file has been read
     filereader.onload = function () {
       if (/.har/.test(event.target.files[0].name)) {
         const fileObj = JSON.parse(filereader.result);
+
         setFilteredFile(filterHarFile(fileObj));
         setLoaded(true);
       } else {
@@ -42,7 +42,9 @@ const UploadFiles = () => {
   const handleUpload = async (event) => {
     event.preventDefault();
     try {
-      await uploadService.upload(user.token, { harRequests: filteredFile });
+      await uploadService.upload(user.token, {
+        harRequests: JSON.parse(filteredFile),
+      });
       console.log('UPLOAD SUCCESSFULL');
     } catch (error) {
       console.log('FUCKs SUCCESSFULL');
