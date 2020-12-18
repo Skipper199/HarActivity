@@ -5,8 +5,10 @@ import Link from '@material-ui/core/Link';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import PublishIcon from '@material-ui/icons/Publish';
 import DescriptionIcon from '@material-ui/icons/Description';
-import { Box, Grid } from '@material-ui/core';
-
+import Box from '@material-ui/core/Box';
+import Alert from '@material-ui/lab/Alert';
+import Snackbar from '@material-ui/core/Snackbar';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 
 import useStyles from './style';
@@ -20,12 +22,20 @@ const UploadFiles = () => {
 
   const [filteredFile, setFilteredFile] = useState(null);
   const [loaded, setLoaded] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [uploaded, setUploaded] = useState(false);
+  const [uploading, setUploading] = useState(false);
+
+  const [openSuccess, setOpenSuccess] = useState(false);
+  const [openWrongFile, setOpenWrongFile] = useState(false);
+  const [openError, setOpenError] = useState(false);
 
   const handleSelectedFile = (event) => {
     const filereader = new FileReader();
-    // Reading a file as plain text
-    filereader.readAsText(event.target.files[0]);
+
+    // Reading a file as plain text if is exists
+    if (event.target.files[0]) {
+      filereader.readAsText(event.target.files[0]);
+    }
     // Once the file has been read
     filereader.onload = function () {
       if (/.har/.test(event.target.files[0].name)) {
@@ -34,21 +44,38 @@ const UploadFiles = () => {
         setFilteredFile(filterHarFile(fileObj));
         setLoaded(true);
       } else {
-        setErrorMessage('Please select a valid file.');
+        setOpenWrongFile(true);
       }
     };
   };
 
   const handleUpload = async (event) => {
     event.preventDefault();
+    setUploading(false);
+    setUploaded(false);
     try {
+      setUploading(true);
       await uploadService.upload(user.token, {
         harRequests: JSON.parse(filteredFile),
       });
-      console.log('UPLOAD SUCCESSFULL');
+      setOpenSuccess(true);
+      setUploaded(true);
     } catch (error) {
-      console.log('Not Successfull');
+      setOpenError(true);
     }
+  };
+
+  const handleClose = () => {
+    setOpenSuccess(false);
+  };
+
+  const handleWrongFileClose = () => {
+    setOpenWrongFile(false);
+  };
+
+  const handleErrorClose = () => {
+    setOpenError(false);
+    setUploading(false);
   };
 
   return (
@@ -58,7 +85,6 @@ const UploadFiles = () => {
         accept=".har"
         className={classes.input}
         id="harFile"
-        multiple
         type="file"
       />
 
@@ -134,13 +160,73 @@ const UploadFiles = () => {
                     fontSize="small"
                     style={{ position: 'absolute', left: '6' }}
                   />
-                  <Box ml={2}>
+                  <Box ml={2.5}>
                     <h6>Upload</h6>
                   </Box>
                 </Button>
                 to upload it to your profile.
               </h4>
             </>
+          ) : (
+            <></>
+          )}
+          {uploading && !uploaded ? (
+            <div>
+              <p>Please wait while we process your file.</p>
+              <CircularProgress />
+            </div>
+          ) : (
+            <></>
+          )}
+
+          {uploaded ? (
+            <Snackbar
+              open={openSuccess}
+              autoHideDuration={5000}
+              onClose={handleClose}
+            >
+              <Alert
+                style={{ position: 'absolute', width: 490, left: -130 }}
+                onClose={handleClose}
+                severity="success"
+              >
+                Your files have been proccessed and uploaded successfully!
+              </Alert>
+            </Snackbar>
+          ) : (
+            <></>
+          )}
+          {openWrongFile ? (
+            <Snackbar
+              open={openWrongFile}
+              autoHideDuration={5000}
+              onClose={handleWrongFileClose}
+            >
+              <Alert
+                style={{ position: 'absolute', width: 260, left: -10 }}
+                onClose={handleWrongFileClose}
+                severity="warning"
+              >
+                Please select a valid file.
+              </Alert>
+            </Snackbar>
+          ) : (
+            <></>
+          )}
+          {openError ? (
+            <Snackbar
+              open={openError}
+              autoHideDuration={5000}
+              onClose={handleErrorClose}
+            >
+              <Alert
+                style={{ position: 'absolute', width: 350, left: -60 }}
+                onClose={handleErrorClose}
+                severity="error"
+              >
+                There was an error with the file upload.
+              </Alert>
+            </Snackbar>
           ) : (
             <></>
           )}

@@ -11,7 +11,7 @@ const filterHarFile = (jsonContents) => {
     serverIPAddress: entry.serverIPAddress,
     request: {
       method: entry.request.method,
-      url: entry.request.url,
+      url: new URL(entry.request.url).hostname,
       headers: entry.request.headers
         .filter(
           (header) =>

@@ -150,7 +150,7 @@ const Profile = ({ setUsername }) => {
                       color="primary"
                       style={{ width: 75, height: 30 }}
                     >
-                      Update
+                      <h4>Update</h4>
                     </Button>
                   </Box>
                 </Grid>
@@ -222,7 +222,7 @@ const Profile = ({ setUsername }) => {
                       color="primary"
                       style={{ width: 75, height: 30 }}
                     >
-                      Update
+                      <h4>Update</h4>
                     </Button>
                   </Box>
                 </Grid>
