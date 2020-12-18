@@ -5,7 +5,7 @@ import Link from '@material-ui/core/Link';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import PublishIcon from '@material-ui/icons/Publish';
 import DescriptionIcon from '@material-ui/icons/Description';
-import { Box } from '@material-ui/core';
+import { Box, Grid } from '@material-ui/core';
 
 import Typography from '@material-ui/core/Typography';
 
@@ -47,7 +47,7 @@ const UploadFiles = () => {
       });
       console.log('UPLOAD SUCCESSFULL');
     } catch (error) {
-      console.log('FUCKs SUCCESSFULL');
+      console.log('Not Successfull');
     }
   };
 
@@ -61,9 +61,10 @@ const UploadFiles = () => {
         multiple
         type="file"
       />
+
       <Box padding={5} textAlign="center">
         <Typography component="p" variant="h3">
-          Upload your HAR file
+          Choose a HAR file to filter
         </Typography>
       </Box>
       <Box textAlign="center">
@@ -80,43 +81,70 @@ const UploadFiles = () => {
             </Box>
           </Button>
         </label>
-        {loaded ? (
-          <>
-            <Link
-              underline="none"
-              href={`data:text/plain;charset=utf-8, ${encodeURIComponent(
-                filteredFile
-              )}`}
-              download="file.json"
-            >
-              <Button
-                variant="contained"
-                color="primary"
-                style={{ width: 250, height: 70 }}
-                component="span"
-              >
-                <GetAppIcon />
-                <Box m={2}>
-                  <h2>Save File</h2>
-                </Box>
-              </Button>
-            </Link>
-            <Button
-              onClick={handleUpload}
-              variant="contained"
-              color="primary"
-              style={{ width: 250, height: 70 }}
-              component="span"
-            >
-              <PublishIcon />
-              <Box m={2}>
-                <h2>Upload File</h2>
-              </Box>
-            </Button>
-          </>
-        ) : (
-          <></>
-        )}
+        <Box m={3}>
+          {loaded ? (
+            <>
+              <Typography component="p" variant="h5">
+                Your file has been successfully filtered!
+              </Typography>
+
+              <h4>
+                Click{' '}
+                <Link
+                  underline="none"
+                  href={`data:text/plain;charset=utf-8, ${encodeURIComponent(
+                    filteredFile
+                  )}`}
+                  download="file.json"
+                >
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    style={{
+                      width: 70,
+                      height: 30,
+                      marginLeft: 3,
+                      marginRight: 4,
+                    }}
+                    component="span"
+                  >
+                    <GetAppIcon
+                      fontSize="small"
+                      style={{ position: 'absolute', left: '5' }}
+                    />
+                    <Box ml={2.5}>
+                      <h6>Save</h6>
+                    </Box>
+                  </Button>
+                </Link>
+                to save the file locally or click
+                <Button
+                  onClick={handleUpload}
+                  variant="contained"
+                  color="primary"
+                  style={{
+                    width: 80,
+                    height: 30,
+                    marginLeft: 6,
+                    marginRight: 6,
+                  }}
+                  component="span"
+                >
+                  <PublishIcon
+                    fontSize="small"
+                    style={{ position: 'absolute', left: '6' }}
+                  />
+                  <Box ml={2}>
+                    <h6>Upload</h6>
+                  </Box>
+                </Button>
+                to upload it to your profile.
+              </h4>
+            </>
+          ) : (
+            <></>
+          )}
+        </Box>
       </Box>
     </div>
   );

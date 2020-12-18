@@ -32,19 +32,18 @@ uploadRouter.post('/', async (request, response, next) => {
   const { harRequests } = body;
 
   const promises = [];
+  console.log(harRequests.length);
   for (let i = 0; i < harRequests.length; i += 1) {
     promises.push(
-      axios
-        .get(`https://freegeoip.app/json/${harRequests[i].serverIPAddress}`)
-        .then((serverInfo) => {
-          // do something with response
-          const serverLoc = [serverInfo.data.latitude, serverInfo.data.longitude];
-          harRequests[i].serverLoc = serverLoc;
-        })
+      axios.get(`http://ipwhois.app/json/${harRequests[i].serverIPAddress}`).then((serverInfo) => {
+        // do something with response
+        const serverLoc = [serverInfo.data.latitude, serverInfo.data.longitude];
+        harRequests[i].serverLoc = serverLoc;
+      })
     );
   }
 
-  Promise.all(promises).then(async () => {
+  Promise.allSettled(promises).then(async () => {
     // After all requests are done
 
     // Creates new user
