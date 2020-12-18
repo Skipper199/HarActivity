@@ -7,6 +7,7 @@ const loginRouter = require('./controllers/login');
 const updateUsernameRouter = require('./controllers/updateUsername');
 const updatePasswordRouter = require('./controllers/updatePassword');
 const uploadRouter = require('./controllers/upload');
+const userStatsRouter = require('./controllers/userStats');
 const logger = require('./utils/logger');
 const config = require('./utils/config');
 const middleware = require('./utils/middleware');
@@ -45,6 +46,7 @@ app.use('/update/username', updateUsernameRouter);
 app.use('/update/password', updatePasswordRouter);
 
 app.use('/upload', uploadRouter);
+app.use('/userstats', userStatsRouter);
 
 // Handle errors
 app.use(middleware.unknownEndpoint);

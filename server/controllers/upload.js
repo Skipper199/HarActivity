@@ -13,7 +13,7 @@ const getTokenFrom = (request) => {
 };
 
 // Handle update username request
-uploadRouter.post('/', async (request, response, next) => {
+uploadRouter.post('/', async (request, response) => {
   const { body } = request;
   const token = getTokenFrom(request);
 
@@ -35,16 +35,11 @@ uploadRouter.post('/', async (request, response, next) => {
 
   for (let i = 0; i < harRequests.length; i += 1) {
     promises.push(
-      axios
-        .get(`http://ipwhois.app/json/${harRequests[i].serverIPAddress}`)
-        .then((serverInfo) => {
-          // do something with response
-          const serverLoc = [
-            serverInfo.data.latitude,
-            serverInfo.data.longitude,
-          ];
-          harRequests[i].serverLoc = serverLoc;
-        })
+      axios.get(`http://ipwhois.app/json/${harRequests[i].serverIPAddress}`).then((serverInfo) => {
+        // do something with response
+        const serverLoc = [serverInfo.data.latitude, serverInfo.data.longitude];
+        harRequests[i].serverLoc = serverLoc;
+      })
     );
   }
 
@@ -71,7 +66,7 @@ uploadRouter.post('/', async (request, response, next) => {
       });
     } catch (error) {
       console.log(error);
-      return response.status(401).json({
+      return response.status(404).json({
         error: 'An error occured in the upload proccess.',
       });
     }

@@ -18,13 +18,16 @@ import uploadService from '../../../../services/uploadFile';
 const UploadFiles = () => {
   const classes = useStyles();
 
+  // Get the logged user
   const user = useSelector((state) => state.user);
 
+  // Setstates for checking status
   const [filteredFile, setFilteredFile] = useState(null);
   const [loaded, setLoaded] = useState(false);
   const [uploaded, setUploaded] = useState(false);
   const [uploading, setUploading] = useState(false);
 
+  // Setstates for showing messages
   const [openSuccess, setOpenSuccess] = useState(false);
   const [openWrongFile, setOpenWrongFile] = useState(false);
   const [openError, setOpenError] = useState(false);
@@ -32,7 +35,7 @@ const UploadFiles = () => {
   const handleSelectedFile = (event) => {
     const filereader = new FileReader();
 
-    // Reading a file as plain text if is exists
+    // Reading a file as plain text if it exists
     if (event.target.files[0]) {
       filereader.readAsText(event.target.files[0]);
     }
@@ -49,6 +52,7 @@ const UploadFiles = () => {
     };
   };
 
+  // Handle the upload
   const handleUpload = async (event) => {
     event.preventDefault();
     setUploading(false);
@@ -65,6 +69,7 @@ const UploadFiles = () => {
     }
   };
 
+  // Handle closing messages
   const handleClose = () => {
     setOpenSuccess(false);
   };

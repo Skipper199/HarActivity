@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 import Container from '@material-ui/core/Container';
@@ -9,19 +9,52 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import Table from '@material-ui/core/Table';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
+import { DataGrid } from '@material-ui/data-grid';
 
 import profileService from '../../../../services/profile';
+import userStatsService from '../../../../services/userStats';
 import useStyles from './style';
 
 const Profile = ({ setUsername }) => {
   const classes = useStyles();
   const fixedHeightPaper = clsx(classes.paper);
 
+  // Get logged user
   const user = useSelector((state) => state.user);
+
+  const [rows, setRows] = useState([]);
+  const [totalRequests, setTotalRequests] = useState([]);
+
+  // Fetch upload data from server
+  useEffect(() => {
+    let isMounted = true; // note this flag denote mount status
+    async function fetchData() {
+      const rows = await userStatsService.userstats(user.token);
+      if (isMounted) {
+        setRows(rows);
+        const reducer = (accumulator, currentValue) =>
+          accumulator + currentValue;
+        const requestsArray = rows.map((item) => item.requests);
+        setTotalRequests(requestsArray.reduce(reducer));
+      }
+    }
+    fetchData();
+    return () => {
+      isMounted = false;
+    };
+  });
+
+  // Set collumns for table
+  const columns = [
+    { field: 'id', headerName: 'ID', width: 150 },
+    { field: 'date', headerName: 'Date', width: 250 },
+    {
+      field: 'requests',
+      headerName: 'Requests',
+      type: 'number',
+      width: 150,
+    },
+  ];
 
   // useState for username update form
   const [newUsername, setNewUsername] = useState('');
@@ -97,6 +130,28 @@ const Profile = ({ setUsername }) => {
     <div>
       <Container maxWidth="lg" className={classes.container}>
         <Grid container spacing={3} direction="column">
+          {/* Recent Uploaded Files */}
+          <Box marginTop={4} marginLeft={2}>
+            <Typography component="p" variant="h4">
+              Uploaded Files
+            </Typography>
+          </Box>
+          <Grid item xs={12} md={8} lg={8}>
+            <Paper className={fixedHeightPaper}>
+              <div style={{ height: 280, width: '100%' }}>
+                <DataGrid
+                  rows={rows}
+                  columns={columns}
+                  pageSize={10}
+                  hideFooter={true}
+                />
+              </div>
+              <h4>
+                Total Files: {rows.length} <br></br> Total Requests:{' '}
+                {totalRequests}
+              </h4>
+            </Paper>
+          </Grid>
           {/* Profile Settings */}
           <Box marginLeft={2}>
             <Typography component="p" variant="h4">
@@ -227,25 +282,6 @@ const Profile = ({ setUsername }) => {
                   </Box>
                 </Grid>
               </form>
-            </Paper>
-          </Grid>
-          {/* Recent Uploaded Files */}
-          <Box marginTop={4} marginLeft={2}>
-            <Typography component="p" variant="h4">
-              Uploaded Files
-            </Typography>
-          </Box>
-          <Grid item xs={12} md={8} lg={7}>
-            <Paper className={fixedHeightPaper}>
-              <Table size="small">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Date Uploaded</TableCell>
-                    <TableCell>Size</TableCell>
-                  </TableRow>
-                </TableHead>
-              </Table>
             </Paper>
           </Grid>
         </Grid>
