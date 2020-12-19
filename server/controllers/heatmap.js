@@ -80,8 +80,8 @@ heatmapRouter.get('/', async (request, response) => {
     const data = [];
     for (let j = 0; j < counts.length; j += 1) {
       data.push({
-        lat: filteredMergedLocArray[j][0],
-        lng: filteredMergedLocArray[j][1],
+        lat: filteredServerLoc[j][0],
+        lng: filteredServerLoc[j][1],
         count: counts[j],
       });
     }

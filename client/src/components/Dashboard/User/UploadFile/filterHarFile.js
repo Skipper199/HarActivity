@@ -1,3 +1,4 @@
+/* eslint-disable no-sequences */
 /* eslint-disable import/no-anonymous-default-export */
 const filterHarFile = (jsonContents) => {
   const toCamelCase = (str) =>
