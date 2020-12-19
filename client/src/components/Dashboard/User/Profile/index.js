@@ -23,7 +23,9 @@ const Profile = ({ setUsername }) => {
   const user = useSelector((state) => state.user);
 
   const [rows, setRows] = useState([]);
-  const [totalRequests, setTotalRequests] = useState([]);
+  const [totalRequests, setTotalRequests] = useState(0);
+
+  const [lastUpload, setLastUpload] = useState();
 
   // Fetch upload data from server
   useEffect(() => {
@@ -35,7 +37,11 @@ const Profile = ({ setUsername }) => {
         const reducer = (accumulator, currentValue) =>
           accumulator + currentValue;
         const requestsArray = rows.map((item) => item.requests);
-        setTotalRequests(requestsArray.reduce(reducer));
+        const dateArray = rows.map((item) => item.date);
+        if (rows.length !== 0) {
+          setTotalRequests(requestsArray.reduce(reducer));
+          setLastUpload(dateArray[rows.length - 1]);
+        }
       }
     }
     fetchData();
@@ -47,7 +53,7 @@ const Profile = ({ setUsername }) => {
   // Set collumns for table
   const columns = [
     { field: 'id', headerName: 'ID', width: 150 },
-    { field: 'date', headerName: 'Date', width: 250 },
+    { field: 'date', headerName: 'Date & Time', width: 250 },
     {
       field: 'requests',
       headerName: 'Requests',
@@ -136,7 +142,7 @@ const Profile = ({ setUsername }) => {
               Uploaded Files
             </Typography>
           </Box>
-          <Grid item xs={12} md={8} lg={8}>
+          <Grid item xs={12} md={8} lg={7}>
             <Paper className={fixedHeightPaper}>
               <div style={{ height: 280, width: '100%' }}>
                 <DataGrid
@@ -148,7 +154,7 @@ const Profile = ({ setUsername }) => {
               </div>
               <h4>
                 Total Files: {rows.length} <br></br> Total Requests:{' '}
-                {totalRequests}
+                {totalRequests} <br></br> Date of Last Upload: {lastUpload}
               </h4>
             </Paper>
           </Grid>
