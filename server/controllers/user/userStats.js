@@ -1,7 +1,7 @@
 /* eslint-disable no-return-assign */
 const jwt = require('jsonwebtoken');
 const userStatsRouter = require('express').Router();
-const HarFile = require('../models/harFile');
+const HarFile = require('../../models/harFile');
 
 const getTokenFrom = (request) => {
   const authorization = request.get('authorization');

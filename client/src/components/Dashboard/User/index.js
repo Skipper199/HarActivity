@@ -52,16 +52,8 @@ const UserDashboard = () => {
       <Switch>
         <Route
           exact
-          path={[
-            `${path}`,
-            `${path}/uploadfiles`,
-            `${path}/profile`,
-            `${path}/heatmap`,
-          ]}
+          path={[`${path}/uploadfiles`, `${path}/profile`, `${path}/heatmap`]}
         >
-          <Route>
-            <Redirect to={`${path}/uploadfiles`} />
-          </Route>
           <CssBaseline />
           <AppBar
             position="absolute"
@@ -151,6 +143,10 @@ const UserDashboard = () => {
               </Box>
             </Container>
           </main>
+        </Route>
+        <Route exact path={`${path}`}>
+          {' '}
+          <Redirect to={`${path}/uploadfiles`} />
         </Route>
         <Route path="/">
           <Error404 />

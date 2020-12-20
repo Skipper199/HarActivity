@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const updatePasswordRouter = require('express').Router();
 const PasswordValidator = require('password-validator');
-const User = require('../models/user');
+const User = require('../../models/user');
 
 const getTokenFrom = (request) => {
   const authorization = request.get('authorization');

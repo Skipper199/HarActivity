@@ -1,10 +1,10 @@
 const bcrypt = require('bcrypt');
-const singupRouter = require('express').Router();
+const signupRouter = require('express').Router();
 const PasswordValidator = require('password-validator');
 const User = require('../models/user');
 
 // Handle signup request
-singupRouter.post('/', async (request, response, next) => {
+signupRouter.post('/', async (request, response, next) => {
   const { body } = request;
 
   // Set rules for password
@@ -59,4 +59,4 @@ singupRouter.post('/', async (request, response, next) => {
   }
 });
 
-module.exports = singupRouter;
+module.exports = signupRouter;

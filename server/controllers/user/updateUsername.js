@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const updateProfileRouter = require('express').Router();
-const User = require('../models/user');
+const User = require('../../models/user');
 
 const getTokenFrom = (request) => {
   const authorization = request.get('authorization');

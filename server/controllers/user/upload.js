@@ -1,8 +1,8 @@
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
 const uploadRouter = require('express').Router();
-const User = require('../models/user');
-const HarFile = require('../models/harFile');
+const User = require('../../models/user');
+const HarFile = require('../../models/harFile');
 
 const getTokenFrom = (request) => {
   const authorization = request.get('authorization');
@@ -36,9 +36,7 @@ uploadRouter.post('/', async (request, response) => {
   for (let i = 0; i < harRequests.length; i += 1) {
     promises.push(
       axios
-        .get(
-          `https://get.geojs.io/v1/ip/geo/${harRequests[i].serverIPAddress}.json`
-        )
+        .get(`https://get.geojs.io/v1/ip/geo/${harRequests[i].serverIPAddress}.json`)
         .then((serverInfo) => {
           // do something with response
           const serverLoc = [

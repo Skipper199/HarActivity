@@ -2,13 +2,13 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const singupRouter = require('./controllers/singup');
+const signupRouter = require('./controllers/signup');
 const loginRouter = require('./controllers/login');
-const updateUsernameRouter = require('./controllers/updateUsername');
-const updatePasswordRouter = require('./controllers/updatePassword');
-const uploadRouter = require('./controllers/upload');
-const userStatsRouter = require('./controllers/userStats');
-const heatmapRouter = require('./controllers/heatmap');
+const updateUsernameRouter = require('./controllers/user/updateUsername');
+const updatePasswordRouter = require('./controllers/user/updatePassword');
+const uploadRouter = require('./controllers/user/upload');
+const userStatsRouter = require('./controllers/user/userStats');
+const heatmapRouter = require('./controllers/user/heatmap');
 const logger = require('./utils/logger');
 const config = require('./utils/config');
 const middleware = require('./utils/middleware');
@@ -40,7 +40,7 @@ app.use(bodyParser.json({ limit: '50mb' })); // Handle request body
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 // Handle requests to different routes
-app.use('/signup', singupRouter);
+app.use('/signup', signupRouter);
 app.use('/login', loginRouter);
 
 app.use('/update/username', updateUsernameRouter);
