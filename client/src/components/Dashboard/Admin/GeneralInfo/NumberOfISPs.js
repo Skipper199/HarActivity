@@ -1,35 +1,33 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import generalInfoService from '../../../../services/admin/generalInfo';
 
-
-const NumberOfUsers = () => {
-
+const NumberOfISPs = () => {
   // Get logged user
   const user = useSelector((state) => state.user);
 
-  const [numberOfUsers, setNumberOfUsers] = useState(0);
+  const [numberOfISPs, setNumberOfISPs] = useState(0);
 
   // Fetch upload data from server
   useEffect(() => {
     let isMounted = true; // note this flag denote mount status
     async function fetchData() {
-      const users = await generalInfoService.numberOfUsers(user.token);
+      const ISPs = await generalInfoService.numberOfISPs(user.token);
       if (isMounted) {
-        setNumberOfUsers(users.count);
+        setNumberOfISPs(ISPs.count);
       }
     }
     fetchData();
     return () => {
       isMounted = false;
     };
-  }, [user.token, setNumberOfUsers]);
+  });
 
   return (
     <div>
-      <h1>Number of Users: {numberOfUsers} </h1>
+      <h1>Number of ISPs: {numberOfISPs} </h1>
     </div>
   );
 };
 
-export default NumberOfUsers;
+export default NumberOfISPs;
