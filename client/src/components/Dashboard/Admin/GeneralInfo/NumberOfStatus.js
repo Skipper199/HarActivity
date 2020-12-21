@@ -65,13 +65,14 @@ const NumberOfStatus = () => {
           },
         ],
         options: {
-          responsive: true,
+          responsive: false,
+          maintainAspectRatio: false,
         },
       },
     });
   }, [mainStatus]);
 
-  return <canvas id="statusChart"></canvas>;
+  return <canvas id="statusChart" width="400" height="300"></canvas>;
 };
 
 export default NumberOfStatus;

@@ -78,26 +78,26 @@ const CountTable = () => {
       <Container maxWidth="lg" className={classes.container}>
         <Grid container spacing={3} direction="column">
           <Box display="flex" justifyContent="center">
-            <Grid item xs={12} md={8} lg={4}>
+            <Grid item xs={12} md={8} lg={3}>
               <TableContainer component={Paper}>
-                <Table className={classes.table} aria-label="simple table">
+                <Table aria-label="simple table">
                   <TableHead>
                     <TableRow>
-                      <TableCell>
-                        <h4>Name</h4>
+                      <TableCell align="left">
+                        <h3>Name</h3>
                       </TableCell>
-                      <TableCell align="right">
-                        <h4>Count</h4>
+                      <TableCell align="center">
+                        <h3>Count</h3>
                       </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {rows.map((row) => (
                       <TableRow key={row.name}>
-                        <TableCell component="th" scope="row">
+                        <TableCell align="left" component="th" scope="row">
                           {row.name}
                         </TableCell>
-                        <TableCell align="right">{row.count}</TableCell>
+                        <TableCell align="center">{row.count}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

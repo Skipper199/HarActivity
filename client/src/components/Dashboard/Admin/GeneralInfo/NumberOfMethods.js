@@ -56,13 +56,14 @@ const NumberOfMethods = () => {
           },
         ],
         options: {
-          responsive: true,
+          responsive: false,
+          maintainAspectRatio: false,
         },
       },
     });
   }, [numberOfMethods]);
 
-  return <canvas id="methodsChart"></canvas>;
+  return <canvas id="methodsChart" width="400" height="300"></canvas>;
 };
 
 export default NumberOfMethods;
