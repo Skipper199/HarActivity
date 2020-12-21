@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const numberOfISPsRouter = require('express').Router();
+const countInfoRouter = require('express').Router();
 const User = require('../../../models/user');
 const HarFile = require('../../../models/harFile');
 
@@ -11,7 +11,8 @@ const getTokenFrom = (request) => {
   return null;
 };
 
-numberOfISPsRouter.get('/', async (request, response, next) => {
+// Handle update username request
+countInfoRouter.get('/', async (request, response, next) => {
   const token = getTokenFrom(request);
 
   const decodedToken = jwt.verify(token, process.env.SECRET);
@@ -28,20 +29,29 @@ numberOfISPsRouter.get('/', async (request, response, next) => {
   }
 
   try {
+    // User count
+    const usersCount = await User.count({ isAdmin: false });
+
     // Find all the uploaded files
     const uploadedFiles = await HarFile.find();
 
+    // Domain Count
+    const domainArray = uploadedFiles.map((outer) =>
+      outer.harRequests.map((inner) => inner.request.url)
+    );
+    const mergedLocArray = domainArray.flat(1);
+    const distinctDomainSet = [...new Set(mergedLocArray)];
+    const domainsCount = distinctDomainSet.length;
+
+    // ISPs count
     const ISPsArray = uploadedFiles.map((item) => item.upload.isp);
-
-    // Returns a set from an array (Keeps only distinct values)
     const distinctISPsSet = [...new Set(ISPsArray)];
+    const ispsCount = distinctISPsSet.length;
 
-    const count = distinctISPsSet.length;
-
-    return response.status(200).send({ count });
+    return response.status(200).send({ usersCount, domainsCount, ispsCount });
   } catch (error) {
     next(error);
   }
 });
 
-module.exports = numberOfISPsRouter;
+module.exports = countInfoRouter;

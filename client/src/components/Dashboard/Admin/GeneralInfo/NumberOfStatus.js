@@ -13,28 +13,35 @@ const NumberOfStatus = () => {
 
   // Fetch upload data from server
   useEffect(() => {
+    let isMounted = true; // note this flag denote mount status
     async function fetchData() {
       const status = await generalInfoService.numberOfStatus(user.token);
-      setNumberOfStatus(status);
-      function compare(a, b) {
-        if (a.count < b.count) {
-          return 1;
+      if (isMounted) {
+        setNumberOfStatus(status);
+        function compare(a, b) {
+          if (a.count < b.count) {
+            return 1;
+          }
+          if (a.count > b.count) {
+            return -1;
+          }
+          return 0;
         }
-        if (a.count > b.count) {
-          return -1;
-        }
-        return 0;
+        const reducer = (accumulator, currentValue) =>
+          accumulator + currentValue;
+        status.sort(compare);
+        const mainStatus = status.slice(0, 3);
+        const otherStatus = status.slice(3);
+        const onlyNumber = otherStatus.map((item) => item.count);
+        const otherSum = onlyNumber.reduce(reducer, 0);
+        mainStatus.push({ status: 'Other', count: otherSum });
+        setMainStatus(mainStatus);
       }
-      const reducer = (accumulator, currentValue) => accumulator + currentValue;
-      status.sort(compare);
-      const mainStatus = status.slice(0, 3);
-      const otherStatus = status.slice(3);
-      const onlyNumber = otherStatus.map((item) => item.count);
-      const otherSum = onlyNumber.reduce(reducer);
-      mainStatus.push({ status: 'Other', count: otherSum });
-      setMainStatus(mainStatus);
     }
     fetchData();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   useEffect(() => {

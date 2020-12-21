@@ -12,21 +12,27 @@ const NumberOfMethods = () => {
 
   // Fetch upload data from server
   useEffect(() => {
+    let isMounted = true; // note this flag denote mount status
     async function fetchData() {
       const methods = await generalInfoService.numberOfMethods(user.token);
-      function compare(a, b) {
-        if (a.count < b.count) {
-          return 1;
+      if (isMounted) {
+        function compare(a, b) {
+          if (a.count < b.count) {
+            return 1;
+          }
+          if (a.count > b.count) {
+            return -1;
+          }
+          return 0;
         }
-        if (a.count > b.count) {
-          return -1;
-        }
-        return 0;
+        methods.sort(compare);
+        setNumberOfMethods(methods);
       }
-      methods.sort(compare);
-      setNumberOfMethods(methods);
     }
     fetchData();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   useEffect(() => {

@@ -11,11 +11,9 @@ const uploadRouter = require('./controllers/user/upload');
 const userStatsRouter = require('./controllers/user/userStats');
 const heatmapRouter = require('./controllers/user/heatmap');
 
-const numberOfUsersRouter = require('./controllers/admin/generalInfo/numberOfUsers');
+const countInfoRouter = require('./controllers/admin/generalInfo/countInfo');
 const numberOfMethodsRouter = require('./controllers/admin/generalInfo/numberOfMethods');
 const numberOfStatusRouter = require('./controllers/admin/generalInfo/numberOfStatus');
-const numberOfDomainsRouter = require('./controllers/admin/generalInfo/numberOfDomains');
-const numberOfISPsRouter = require('./controllers/admin/generalInfo/numberOfISPs');
 
 const logger = require('./utils/logger');
 const config = require('./utils/config');
@@ -59,11 +57,9 @@ app.use('/userstats', userStatsRouter);
 app.use('/heatmap', heatmapRouter);
 
 // Handle requests from admin
-app.use('/admin/generalinfo/numberofusers', numberOfUsersRouter);
+app.use('/admin/generalinfo/countinfo', countInfoRouter);
 app.use('/admin/generalinfo/numberofmethods', numberOfMethodsRouter);
 app.use('/admin/generalinfo/numberofstatus', numberOfStatusRouter);
-app.use('/admin/generalinfo/numberofdomains', numberOfDomainsRouter);
-app.use('/admin/generalinfo/numberofisps', numberOfISPsRouter);
 
 // Handle errors
 app.use(middleware.unknownEndpoint);
