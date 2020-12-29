@@ -32,8 +32,19 @@ const numberOfStatus = async (token) => {
   return response.data;
 };
 
+// Get request for number of status
+const averageAge = async (token) => {
+  const urlToSend = `${baseUrl}/averageage`;
+  const tokenToSend = `bearer ${token}`;
+  const response = await axios.get(urlToSend, {
+    headers: { Authorization: tokenToSend },
+  });
+  return response.data;
+};
+
 export default {
   numberOfMethods,
   numberOfStatus,
   countInfo,
+  averageAge,
 };

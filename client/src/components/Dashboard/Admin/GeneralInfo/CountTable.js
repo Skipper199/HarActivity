@@ -42,9 +42,9 @@ const CountTable = () => {
   // Get logged user
   const user = useSelector((state) => state.user);
 
-  const [numberOfUsers, setNumberOfUsers] = useState(0);
-  const [numberOfDomains, setNumberOfDomains] = useState(0);
-  const [numberOfISPs, setNumberOfISPs] = useState(0);
+  // const [numberOfUsers, setNumberOfUsers] = useState(0);
+  // const [numberOfDomains, setNumberOfDomains] = useState(0);
+  // const [numberOfISPs, setNumberOfISPs] = useState(0);
   const [rows, setRows] = useState([]);
 
   // Fetch upload data from server
@@ -53,9 +53,9 @@ const CountTable = () => {
     async function fetchData() {
       const info = await generalInfoService.countInfo(user.token);
       if (isMounted) {
-        setNumberOfUsers(info.usersCount);
-        setNumberOfDomains(info.domainsCount);
-        setNumberOfISPs(info.ispsCount);
+        // setNumberOfUsers(info.usersCount);
+        // setNumberOfDomains(info.domainsCount);
+        // setNumberOfISPs(info.ispsCount);
         function createData(name, count) {
           return { name, count };
         }

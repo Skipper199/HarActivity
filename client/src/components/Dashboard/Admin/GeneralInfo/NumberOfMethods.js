@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import Chart from 'chart.js';
+import Gradient from 'javascript-color-gradient';
 
 import generalInfoService from '../../../../services/admin/generalInfo';
 
@@ -37,6 +38,15 @@ const NumberOfMethods = () => {
 
   useEffect(() => {
     const ctx = document.getElementById('methodsChart').getContext('2d');
+    const colorGradient = new Gradient();
+    const color1 = '#253980';
+    const color2 = '#632580';
+    const color3 = '#802525';
+    const color4 = '#5a8025';
+
+    colorGradient.setMidpoint(numberOfMethods.length);
+
+    colorGradient.setGradient(color1, color2, color3, color4);
     new Chart(ctx, {
       type: 'pie',
       data: {
@@ -45,13 +55,7 @@ const NumberOfMethods = () => {
           {
             label: 'Requests Methods',
             data: numberOfMethods.map((item) => item.count),
-            backgroundColor: [
-              '#00a4e7',
-              '#34c1c0',
-              '#ffcb64',
-              '#ff9d4c',
-              '#ffcb64',
-            ],
+            backgroundColor: colorGradient.getArray(),
             borderWidth: 1,
           },
         ],

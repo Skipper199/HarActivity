@@ -57,20 +57,19 @@ averageAgeRouter.get('/', async (request, response, next) => {
     });
 
     // Removes undefined values
-    const filteredContentTypeArray = contentTypeArray.filter((x) => x !== undefined);
-    // Adds a ; at the end of every string
-    const filteredContentTypeArray2 = filteredContentTypeArray.map((item) => `${item};`);
-    // Regex to keep everything before ;
-    const regexContentTypeArray = filteredContentTypeArray2.map((item) =>
-      item.match(/([A-Za-z0-9]+\/+[A-Za-z0-9._+!@#$%^&*(){}:">?`-]+)?(?=;)/)
+    const filteredContentTypeArray = contentTypeArray.filter(
+      (x) => x !== undefined
     );
 
-    //
-    // Returns only the wanted string because exec() method returns an array
-    const keepOnlyDesiredStringFromRegex = regexContentTypeArray.map((item) => item[0]);
-    // Keeps only distinct Content Types
-    const distinctContentTypeArray = [...new Set(keepOnlyDesiredStringFromRegex)];
-    const distinctContentTypeArrayFinal = distinctContentTypeArray.filter((item) => item !== '');
+    // Regex to keep everything before ;
+    const regexContentTypeArray = filteredContentTypeArray.map(
+      (item) => item.split(';')[0]
+    );
+
+    const distinctContentTypeArray = [...new Set(regexContentTypeArray)];
+    const distinctContentTypeArrayFinal = distinctContentTypeArray.filter(
+      (item) => item !== ''
+    );
 
     const ageArray = [];
     let hits = 0;
@@ -82,7 +81,7 @@ averageAgeRouter.get('/', async (request, response, next) => {
 
         if (regex.test(item.contentType)) {
           if (item.age) {
-            age = item.age / 1000;
+            age = parseInt(item.age);
             ageTotal += age;
             hits += 1;
           }
@@ -96,7 +95,7 @@ averageAgeRouter.get('/', async (request, response, next) => {
     for (let j = 0; j < distinctContentTypeArray.length; j += 1) {
       data.push({
         contentType: distinctContentTypeArray[j],
-        averageAge: ageArray[j],
+        averageAge: parseInt(ageArray[j]),
       });
     }
     console.log(distinctContentTypeArrayFinal);
