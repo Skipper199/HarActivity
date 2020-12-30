@@ -8,11 +8,8 @@ import responseTimeService from '../../../../services/admin/responseTime';
 import { makeStyles } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -31,8 +28,7 @@ const ResponseTime = () => {
 
   const [originalData, setOriginalData] = useState([]);
   const [chartData, setChartData] = useState([]);
-  const [groupByValue, setGroupByValue] = useState(0);
-  const [checkbox, setCheckbox] = useState(false);
+  const [chart, setChart] = useState();
 
   // Fetch upload data from server
   useEffect(() => {
@@ -41,10 +37,14 @@ const ResponseTime = () => {
       const res = await responseTimeService.responseTime(user.token);
       if (isMounted) {
         setOriginalData(res);
-        setChartData({
-          label: res[0][0].name,
-          data: res[0][0].wait,
-        });
+        setChartData([
+          {
+            label: res[0][0].name,
+            backgroundColor: 'red',
+            borderWidth: 1,
+            data: res[0][0].wait,
+          },
+        ]);
       }
     }
     fetchData();
@@ -69,8 +69,7 @@ const ResponseTime = () => {
         chartData[i].backgroundColor = colorGradient.getColor(i + 1);
       }
     }
-
-    new Chart(ctx, {
+    const chartOriginal = new Chart(ctx, {
       type: 'bar',
       data: {
         labels: [
@@ -114,24 +113,39 @@ const ResponseTime = () => {
         },
       },
     });
+    setChart(chartOriginal);
   }, [chartData]);
 
   const handleGroupByChange = ({ target }) => {
-    setChartData(
-      originalData[target.value].map((item) => ({
-        label: item.name,
-        backgroundColor: 'red',
-        borderWidth: 1,
-        data: item.wait,
-      }))
-    );
-    setGroupByValue(target.value);
-    setCheckbox(true);
-    console.log('dadadada');
+    const newData = originalData[target.value].map((item) => ({
+      label: item.name,
+      backgroundColor: 'red',
+      borderWidth: 1,
+      data: item.wait,
+    }));
+
+    const colorGradient = new Gradient();
+    const color1 = '#253980';
+    const color2 = '#632580';
+    const color3 = '#802525';
+    const color4 = '#5a8025';
+
+    colorGradient.setGradient(color1, color2, color3, color4);
+
+    if (newData.length > 0) {
+      colorGradient.setMidpoint(newData.length);
+      for (let i = 0; i < newData.length; i += 1) {
+        newData[i].backgroundColor = colorGradient.getColor(i + 1);
+      }
+    }
+
+    chart.data.datasets = newData;
+    chart.update();
   };
 
   return (
     <>
+      <h3> Average Response Time (ms) </h3>
       <div>
         <FormControl className={classes.formControl}>
           <InputLabel id="group-by">Group By</InputLabel>
@@ -141,7 +155,7 @@ const ResponseTime = () => {
             defaultValue="0"
             onChange={handleGroupByChange}
           >
-            <MenuItem value={0}>All</MenuItem>
+            <MenuItem value={0}>Nothing</MenuItem>
             <MenuItem value={1}>Content Type</MenuItem>
             <MenuItem value={2}>Day Of The Week</MenuItem>
             <MenuItem value={3}>Http Method</MenuItem>

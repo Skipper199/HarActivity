@@ -68,7 +68,12 @@ responseTimeRouter.get('/', async (request, response, next) => {
       }
     }
 
-    const arr0 = [{ name: 'All', wait: avgWaitTimes }];
+    const arr0 = [
+      {
+        name: 'Response Time',
+        wait: avgWaitTimes.map((item) => item.toFixed(3)),
+      },
+    ];
 
     /* ************************************************
     ***************************************************
@@ -135,6 +140,8 @@ responseTimeRouter.get('/', async (request, response, next) => {
       (x) => x !== undefined
     );
 
+    console.log(filteredResponseDateArray);
+    console.log(distinctContentTypeArray);
     const arr1 = [];
 
     for (let i = 0; i < distinctContentTypeArray.length; i += 1) {
@@ -146,7 +153,7 @@ responseTimeRouter.get('/', async (request, response, next) => {
 
         if (regex.test(item.contentType)) {
           const index = new Date(item.startedDateTime).getHours();
-          sum[index] += mergedWaitArray[i].wait;
+          sum[index] += item.wait;
           occurances[index] += 1;
         }
       });
@@ -161,7 +168,7 @@ responseTimeRouter.get('/', async (request, response, next) => {
 
       arr1.push({
         name: distinctContentTypeArray[i],
-        wait: avgWaitTimes,
+        wait: avgWaitTimes.map((item) => item.toFixed(3)),
       });
     }
 
