@@ -60,17 +60,18 @@ averageAgeRouter.get('/', async (request, response, next) => {
     const filteredContentTypeArray = contentTypeArray.filter(
       (x) => x !== undefined
     );
-
-    // Regex to keep everything before ;
-    const regexContentTypeArray = filteredContentTypeArray.map(
+    // Keeps only the media-type
+    const splitContentTypeArray = filteredContentTypeArray.map(
       (item) => item.split(';')[0]
     );
 
-    const distinctContentTypeArray = [...new Set(regexContentTypeArray)];
-    const distinctContentTypeArrayFinal = distinctContentTypeArray.filter(
-      (item) => item !== ''
+    const filteredSplitContentTypeArray = splitContentTypeArray.filter((item) =>
+      item.includes('/')
     );
 
+    const distinctContentTypeArray = [
+      ...new Set(filteredSplitContentTypeArray),
+    ];
     const ageArray = [];
     let hits = 0;
     let ageTotal = 0;
@@ -98,7 +99,6 @@ averageAgeRouter.get('/', async (request, response, next) => {
         averageAge: parseInt(ageArray[j]),
       });
     }
-    console.log(distinctContentTypeArrayFinal);
 
     return response.status(200).send({ data });
   } catch (error) {

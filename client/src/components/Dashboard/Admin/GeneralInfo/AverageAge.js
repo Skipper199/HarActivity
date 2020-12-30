@@ -62,21 +62,12 @@ const AverageAge = () => {
         options: {
           responsive: false,
           maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              position: 'top',
-            },
-            title: {
-              display: true,
-              text: 'Chart.js Bar Chart',
-            },
-          },
         },
       },
     });
   }, [avgAgeElem]);
 
-  return <canvas id="averageAgeChart" width="400" height="300"></canvas>;
+  return <canvas id="averageAgeChart" width="225" height="125"></canvas>;
 };
 
 export default AverageAge;

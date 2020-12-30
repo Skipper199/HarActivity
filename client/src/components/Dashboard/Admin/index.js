@@ -48,7 +48,6 @@ const Admin = () => {
 
   const { path } = useRouteMatch();
 
-
   if (!user.isAdmin) {
     return <Redirect to="/dashboard/user" />;
   }
@@ -135,7 +134,7 @@ const Admin = () => {
                   <GeneralInfo />
                 </Route>
                 <Route exact path={`${path}/responsetime`}>
-                  <ResponseTime setUsername={setUsername} />
+                  <ResponseTime />
                 </Route>
                 <Route exact path={`${path}/httpheaders`}>
                   <HTTPHeaders />

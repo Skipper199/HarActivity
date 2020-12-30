@@ -15,6 +15,7 @@ const countInfoRouter = require('./controllers/admin/generalInfo/countInfo');
 const numberOfMethodsRouter = require('./controllers/admin/generalInfo/numberOfMethods');
 const numberOfStatusRouter = require('./controllers/admin/generalInfo/numberOfStatus');
 const averageAgeRouter = require('./controllers/admin/generalInfo/averageAge');
+const responseTimeRouter = require('./controllers/admin/responseTime/responseTime');
 
 const logger = require('./utils/logger');
 const config = require('./utils/config');
@@ -62,6 +63,7 @@ app.use('/admin/generalinfo/countinfo', countInfoRouter);
 app.use('/admin/generalinfo/numberofmethods', numberOfMethodsRouter);
 app.use('/admin/generalinfo/numberofstatus', numberOfStatusRouter);
 app.use('/admin/generalinfo/averageage', averageAgeRouter);
+app.use('/admin/responsetime', responseTimeRouter);
 
 // Handle errors
 app.use(middleware.unknownEndpoint);
