@@ -140,8 +140,6 @@ responseTimeRouter.get('/', async (request, response, next) => {
       (x) => x !== undefined
     );
 
-    console.log(filteredResponseDateArray);
-    console.log(distinctContentTypeArray);
     const arr1 = [];
 
     for (let i = 0; i < distinctContentTypeArray.length; i += 1) {
@@ -178,7 +176,161 @@ responseTimeRouter.get('/', async (request, response, next) => {
     ***************************************************
     ************************************************ */
 
-    return response.status(200).send([arr0, arr1]);
+    const daysOfTheWeek = [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+    ];
+    const arr2 = [];
+
+    for (let i = 0; i < 7; i += 1) {
+      const sum = new Array(24).fill(0);
+      const occurances = new Array(24).fill(0);
+
+      mergedWaitArray.map((item) => {
+        const day = new Date(item.startedDateTime).getDay();
+
+        if (i === day) {
+          const index = new Date(item.startedDateTime).getHours();
+          sum[index] += item.wait;
+          occurances[index] += 1;
+        }
+      });
+
+      const avgWaitTimes = new Array(24).fill(0);
+
+      for (let j = 0; j < sum.length; j += 1) {
+        if (occurances[j] !== 0) {
+          avgWaitTimes[j] = sum[j] / occurances[j];
+        }
+      }
+
+      arr2.push({
+        name: daysOfTheWeek[i],
+        wait: avgWaitTimes.map((item) => item.toFixed(3)),
+      });
+    }
+
+    /* ************************************************
+    ***************************************************
+                Data grouped by http method
+    ***************************************************
+    ************************************************ */
+
+    // Returns all the responses
+    const waitMethodArray = uploadedFiles.map((outer) =>
+      outer.harRequests.map((inner) => ({
+        method: inner.request.method,
+        startedDateTime: inner.startedDateTime,
+        wait: inner.timings.wait,
+      }))
+    );
+
+    // Merges all the wait times into one array
+    const mergedWaitMethodArray = waitMethodArray.flat(1);
+
+    // Returns only the method arrays
+    const methodArray = uploadedFiles.map((outer) =>
+      outer.harRequests.map((inner) => inner.request.method)
+    );
+
+    // Merges all the methods arrays into one
+    const mergedMethodArray = methodArray.flat(1);
+
+    // Returns a set from an array (Keeps only distinct values)
+    const distinctMethodSet = [...new Set(mergedMethodArray)];
+
+    // Returns an array from previous set
+    const distinctMethodArray = Array.from(distinctMethodSet);
+
+    const arr3 = [];
+
+    for (let i = 0; i < distinctMethodArray.length; i += 1) {
+      const sum = new Array(24).fill(0);
+      const occurances = new Array(24).fill(0);
+
+      mergedWaitMethodArray.map((item) => {
+        if (distinctMethodArray[i] === item.method) {
+          const index = new Date(item.startedDateTime).getHours();
+          sum[index] += item.wait;
+          occurances[index] += 1;
+        }
+      });
+
+      const avgWaitTimes = new Array(24).fill(0);
+
+      for (let j = 0; j < sum.length; j += 1) {
+        if (occurances[j] !== 0) {
+          avgWaitTimes[j] = sum[j] / occurances[j];
+        }
+      }
+
+      arr3.push({
+        name: distinctMethodArray[i],
+        wait: avgWaitTimes.map((item) => item.toFixed(3)),
+      });
+    }
+
+    /* ************************************************
+    ***************************************************
+                    Data grouped by ISPs
+    ***************************************************
+    ************************************************ */
+
+    // Returns only the ISPs
+    const ispArray = uploadedFiles.map((item) => item.upload.isp);
+
+    // Returns a set from an array (Keeps only distinct values)
+    const distinctISPSet = [...new Set(ispArray)];
+
+    // Returns an array from previous set
+    const distinctISPArray = Array.from(distinctISPSet);
+
+    // Returns all the data needed
+    const waitISPArray = uploadedFiles.map((outer) =>
+      outer.harRequests.map((inner) => ({
+        isp: outer.upload.isp,
+        startedDateTime: inner.startedDateTime,
+        wait: inner.timings.wait,
+      }))
+    );
+
+    // Merges all the wait times into one array
+    const mergedWaitISPArray = waitISPArray.flat(1);
+
+    const arr4 = [];
+
+    for (let i = 0; i < distinctISPArray.length; i += 1) {
+      const sum = new Array(24).fill(0);
+      const occurances = new Array(24).fill(0);
+
+      mergedWaitISPArray.map((item) => {
+        if (distinctISPArray[i] === item.isp) {
+          const index = new Date(item.startedDateTime).getHours();
+          sum[index] += item.wait;
+          occurances[index] += 1;
+        }
+      });
+
+      const avgWaitTimes = new Array(24).fill(0);
+
+      for (let j = 0; j < sum.length; j += 1) {
+        if (occurances[j] !== 0) {
+          avgWaitTimes[j] = sum[j] / occurances[j];
+        }
+      }
+
+      arr4.push({
+        name: distinctISPArray[i],
+        wait: avgWaitTimes.map((item) => item.toFixed(3)),
+      });
+    }
+
+    return response.status(200).send([arr0, arr1, arr2, arr3, arr4]);
   } catch (error) {
     next(error);
   }

@@ -158,7 +158,7 @@ const ResponseTime = () => {
             <MenuItem value={0}>Nothing</MenuItem>
             <MenuItem value={1}>Content Type</MenuItem>
             <MenuItem value={2}>Day Of The Week</MenuItem>
-            <MenuItem value={3}>Http Method</MenuItem>
+            <MenuItem value={3}>HTTP Method</MenuItem>
             <MenuItem value={4}>ISP</MenuItem>
           </Select>
         </FormControl>

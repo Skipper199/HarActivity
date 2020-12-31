@@ -6,7 +6,10 @@ const baseUrl = '/upload';
 const upload = async (token, credentials) => {
   const tokenToSend = `bearer ${token}`;
   const response = await axios.post(baseUrl, credentials, {
-    headers: { Authorization: tokenToSend, 'x-forwarded-for': '79.166.88.47' },
+    headers: {
+      Authorization: tokenToSend,
+      'x-forwarded-for': '176.58.225.185',
+    },
   });
   return response.data;
 };
