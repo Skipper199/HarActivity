@@ -22,7 +22,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import ListItems from './ListItems/index';
 import GeneralInfo from './GeneralInfo/index';
 import ResponseTime from './ResponseTime/index';
-import HTTPHeaders from './HTTPHeaders/index';
+import CacheInfo from './CacheInfo/index';
 import Flowmap from './Flowmap/index';
 import Error404 from '../../Error404/index';
 
@@ -60,7 +60,7 @@ const Admin = () => {
           path={[
             `${path}/generalinfo`,
             `${path}/responsetime`,
-            `${path}/httpheaders`,
+            `${path}/cacheinfo`,
             `${path}/flowmap`,
           ]}
         >
@@ -136,8 +136,8 @@ const Admin = () => {
                 <Route exact path={`${path}/responsetime`}>
                   <ResponseTime />
                 </Route>
-                <Route exact path={`${path}/httpheaders`}>
-                  <HTTPHeaders />
+                <Route exact path={`${path}/cacheinfo`}>
+                  <CacheInfo />
                 </Route>
                 <Route exact path={`${path}/flowmap`}>
                   <Flowmap />

@@ -33,12 +33,12 @@ const ListItems = () => {
       </ListItem>
       <ListItem
         button
-        onClick={() => history.push('/dashboard/admin/httpheaders')}
+        onClick={() => history.push('/dashboard/admin/cacheinfo')}
       >
         <ListItemIcon>
           <HttpIcon />
         </ListItemIcon>
-        <ListItemText primary="HTTP Headers" />
+        <ListItemText primary="Cache Info" />
       </ListItem>
       <ListItem button onClick={() => history.push('/dashboard/admin/flowmap')}>
         <ListItemIcon>

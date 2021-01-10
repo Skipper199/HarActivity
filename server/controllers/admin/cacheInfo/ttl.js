@@ -70,8 +70,11 @@ ttlRouter.get('/', async (request, response, next) => {
               inner.response.headers.lastModified
             ) {
               const expires = new Date(inner.response.headers.expires);
-              const lastModified = new Date(inner.response.headers.lastModified);
-              const secDiffTtl = (expires.getTime() - lastModified.getTime()) / 1000;
+              const lastModified = new Date(
+                inner.response.headers.lastModified
+              );
+              const secDiffTtl =
+                (expires.getTime() - lastModified.getTime()) / 1000;
 
               if (secDiffTtl >= 0) {
                 obj.ttl = secDiffTtl;
@@ -81,7 +84,8 @@ ttlRouter.get('/', async (request, response, next) => {
             return obj;
           }
         })
-        .filter((item) => item !== undefined),
+        .filter((item) => item !== undefined)
+        .filter((item) => item.ttl !== undefined),
     }));
 
     const distinctISP = [...new Set(infoArray.map((item) => item.isp))];
@@ -98,6 +102,70 @@ ttlRouter.get('/', async (request, response, next) => {
       ),
     ];
 
+    const bucketIntervals = (buckets, minTtl) => {
+      buckets.unshift(minTtl);
+
+      const intervalsString = [];
+      for (let i = 0; i < buckets.length - 1; i += 1) {
+        intervalsString.push(
+          buckets[i]
+            .toFixed(2)
+            .toString()
+            .concat(' - ', buckets[i + 1].toFixed(2).toString())
+        );
+      }
+
+      return intervalsString;
+    };
+
+    // Array to keep the response data
+    const histogramData = [];
+
+    // Keep info from all ISPs together
+    const allInfoArray = infoArray.map((item) => item.data).flat(1);
+
+    // Create the buckets array
+    const minTtl = Math.min(...allInfoArray.map((item) => item.ttl));
+    const maxTtl = Math.max(...allInfoArray.map((item) => item.ttl));
+
+    const interval = (maxTtl - minTtl) / 10;
+
+    const buckets = [];
+    for (let i = minTtl; i <= maxTtl; i += interval) {
+      if (i > minTtl) {
+        buckets.push(i);
+      }
+    }
+
+    buckets.pop(1);
+    buckets.push(maxTtl);
+
+    // Store data for every ISP grouped by contentType
+    const data = [];
+    for (let i = 0; i < distinctContentTypes.length; i += 1) {
+      const occurences = new Array(10).fill(0);
+      for (let j = 0; j < allInfoArray.length; j += 1) {
+        if (distinctContentTypes[i] === allInfoArray[j].contentType) {
+          const index = d3Array.bisectLeft(buckets, allInfoArray[j].ttl);
+          occurences[index] += 1;
+        }
+      }
+
+      const arraySum = occurences.reduce((a, b) => a + b, 0);
+      if (arraySum !== 0) {
+        data.push({
+          contentType: distinctContentTypes[i],
+          occurences,
+        });
+      }
+    }
+
+    histogramData.push({
+      isp: 'All',
+      buckets: bucketIntervals(buckets, minTtl),
+      data,
+    });
+
     // Groups data based on ISP
     const groupedInfoArray = [];
     for (let i = 0; i < distinctISP.length; i += 1) {
@@ -110,8 +178,6 @@ ttlRouter.get('/', async (request, response, next) => {
       groupedInfoArray.push({ isp: distinctISP[i], data: dataISP.flat(1) });
     }
 
-    // Array to keep the response data
-    const histogramData = [];
     for (let k = 0; k < distinctISP.length; k += 1) {
       const innerArray = groupedInfoArray[k].data;
 
@@ -120,12 +186,16 @@ ttlRouter.get('/', async (request, response, next) => {
       const maxTtl = Math.max(...innerArray.map((item) => item.ttl));
 
       const interval = (maxTtl - minTtl) / 10;
+
       const buckets = [];
       for (let i = minTtl; i <= maxTtl; i += interval) {
         if (i > minTtl) {
           buckets.push(i);
         }
       }
+
+      buckets.pop(1);
+      buckets.push(maxTtl);
 
       // Store data for every ISP grouped by contentType
       const data = [];
@@ -140,11 +210,18 @@ ttlRouter.get('/', async (request, response, next) => {
 
         const arraySum = occurences.reduce((a, b) => a + b, 0);
         if (arraySum !== 0) {
-          data.push({ contentType: distinctContentTypes[i], occurences });
+          data.push({
+            contentType: distinctContentTypes[i],
+            occurences,
+          });
         }
       }
 
-      histogramData.push({ isp: distinctISP[k], data });
+      histogramData.push({
+        isp: distinctISP[k],
+        buckets: bucketIntervals(buckets, minTtl),
+        data,
+      });
     }
     return response.status(200).send(histogramData);
   } catch (error) {
