@@ -161,7 +161,7 @@ ttlRouter.get('/', async (request, response, next) => {
     }
 
     histogramData.push({
-      isp: 'All',
+      isp: 'Nothing',
       buckets: bucketIntervals(buckets, minTtl),
       data,
     });

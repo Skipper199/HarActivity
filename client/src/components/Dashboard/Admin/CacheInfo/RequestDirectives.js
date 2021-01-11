@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Ttl = () => {
+const RequestDirectives = () => {
   const classes = useStyles();
   // Get logged user
   const user = useSelector((state) => state.user);
@@ -34,15 +34,14 @@ const Ttl = () => {
   useEffect(() => {
     let isMounted = true; // note this flag denote mount status
     async function fetchData() {
-      const res = await cacheInfoService.ttl(user.token);
+      const res = await cacheInfoService.requestDirectives(user.token);
       if (isMounted) {
         setOriginalData(res);
 
         const chartInfo = {
-          buckets: res[0].buckets,
           data: res[0].data.map((item) => ({
             label: item.contentType,
-            data: item.occurences,
+            data: item.maxMinArray,
           })),
         };
 
@@ -56,7 +55,9 @@ const Ttl = () => {
   }, []);
 
   useEffect(() => {
-    const ctx = document.getElementById('responseTimeChart').getContext('2d');
+    const ctx = document
+      .getElementById('requestDirectivesChart')
+      .getContext('2d');
     const colorGradient = new Gradient();
     const color1 = '#253980';
     const color2 = '#632580';
@@ -74,7 +75,7 @@ const Ttl = () => {
     const chartOriginal = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: chartData.buckets,
+        labels: ['max-stale', 'min-fresh'],
         datasets: chartData.data,
         options: {
           responsive: false,
@@ -96,14 +97,9 @@ const Ttl = () => {
   const handleGroupByChange = ({ target }) => {
     const newData = originalData[target.value].data.map((item) => ({
       label: item.contentType,
-      data: item.occurences,
+      data: item.maxMinArray,
       borderWidth: 1,
     }));
-
-    const chartInfo = {
-      buckets: originalData[target.value].buckets,
-      data: newData,
-    };
 
     const colorGradient = new Gradient();
     const color1 = '#253980';
@@ -120,14 +116,13 @@ const Ttl = () => {
       }
     }
 
-    chart.data.labels = chartInfo.buckets;
     chart.data.datasets = newData;
     chart.update();
   };
 
   return (
     <>
-      <h3> TTL Histogram </h3>
+      <h3> Request Directives Percentages</h3>
       <div>
         <FormControl className={classes.formControl}>
           <InputLabel id="group-by">Group By</InputLabel>
@@ -145,9 +140,9 @@ const Ttl = () => {
           </Select>
         </FormControl>
       </div>
-      <canvas id="responseTimeChart" width="225" height="125"></canvas>
+      <canvas id="requestDirectivesChart" width="225" height="125"></canvas>
     </>
   );
 };
 
-export default Ttl;
+export default RequestDirectives;

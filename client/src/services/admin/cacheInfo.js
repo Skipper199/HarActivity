@@ -2,7 +2,7 @@
 import axios from 'axios';
 const baseUrl = '/admin/cacheinfo';
 
-// Get request for countInfo
+// Get request for ttl
 const ttl = async (token) => {
   const urlToSend = `${baseUrl}/ttl`;
   const tokenToSend = `bearer ${token}`;
@@ -12,4 +12,14 @@ const ttl = async (token) => {
   return response.data;
 };
 
-export default { ttl };
+// Get request for request directives
+const requestDirectives = async (token) => {
+  const urlToSend = `${baseUrl}/requestdirectives`;
+  const tokenToSend = `bearer ${token}`;
+  const response = await axios.get(urlToSend, {
+    headers: { Authorization: tokenToSend },
+  });
+  return response.data;
+};
+
+export default { ttl, requestDirectives };
