@@ -33,63 +33,50 @@ averageAgeRouter.get('/', async (request, response, next) => {
     // Find all the uploaded files
     const uploadedFiles = await HarFile.find();
 
-    // Returns all the responses
-    const responseArray = uploadedFiles.map((outer) =>
-      outer.harRequests.map((middle) => {
-        if (middle.response) return middle.response;
-      })
-    );
-
-    // Merges all the responses into one array
-    const mergedResponseArray = responseArray.flat(1);
-
-    // Returns all the headers
-    const headersArray = mergedResponseArray.map((item) => {
-      if (item.headers) return item.headers;
-    });
-
-    // Removes undefined values
-    const filteredHeadersArray = headersArray.filter((x) => x !== undefined);
+    const neededHeaders = uploadedFiles
+      .map((outer) =>
+        outer.harRequests
+          .map((inner) => {
+            if (
+              inner.response.headers &&
+              inner.response.headers.contentType &&
+              inner.response.headers.contentType.includes('/') &&
+              inner.response.headers.lastModified
+            ) {
+              const obj = {
+                contentType: inner.response.headers.contentType.split(';')[0],
+                startedDateTime: new Date(inner.startedDateTime),
+                lastModified: new Date(inner.response.headers.lastModified),
+              };
+              return obj;
+            }
+          })
+          .filter((x) => x !== undefined)
+      )
+      .flat(1);
 
     // Returns all the Content Types
-    const contentTypeArray = filteredHeadersArray.map((item) => {
-      if (item.contentType) return item.contentType;
-    });
+    const contentTypeArray = neededHeaders.map((item) => item.contentType);
 
-    // Removes undefined values
-    const filteredContentTypeArray = contentTypeArray.filter(
-      (x) => x !== undefined
-    );
-    // Keeps only the media-type
-    const splitContentTypeArray = filteredContentTypeArray.map(
-      (item) => item.split(';')[0]
-    );
+    const distinctContentTypeArray = [...new Set(contentTypeArray)];
 
-    const filteredSplitContentTypeArray = splitContentTypeArray.filter((item) =>
-      item.includes('/')
-    );
-
-    const distinctContentTypeArray = [
-      ...new Set(filteredSplitContentTypeArray),
-    ];
     const ageArray = [];
     let hits = 0;
     let ageTotal = 0;
-    let age = 0;
+    let ageInHours = 0;
     for (let i = 0; i < distinctContentTypeArray.length; i += 1) {
-      filteredHeadersArray.map((item) => {
+      neededHeaders.map((item) => {
         const regex = new RegExp(`${distinctContentTypeArray[i]}`);
 
         if (regex.test(item.contentType)) {
-          if (item.age) {
-            age = parseInt(item.age);
-            ageTotal += age;
-            hits += 1;
-          }
+          ageInHours =
+            (item.startedDateTime.getTime() - item.lastModified.getTime()) /
+            3600000;
+          ageTotal += ageInHours;
+          hits += 1;
         }
       });
-      if (ageTotal === 0) ageArray.push(0);
-      else ageArray.push(ageTotal / hits);
+      ageArray.push(ageTotal / hits);
     }
 
     const data = [];

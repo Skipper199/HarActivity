@@ -30,7 +30,7 @@ countInfoRouter.get('/', async (request, response, next) => {
 
   try {
     // User count
-    const usersCount = await User.count({ isAdmin: false });
+    const usersCount = await User.countDocuments({ isAdmin: false });
 
     // Find all the uploaded files
     const uploadedFiles = await HarFile.find();

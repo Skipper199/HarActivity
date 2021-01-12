@@ -24,13 +24,18 @@ heatmapRouter.get('/', async (request, response) => {
   }
 
   try {
-    // Find all the upload based on user id
+    // Find all the uploaded files based on user id
     const uploadedFiles = await HarFile.find({ user: decodedToken.id });
 
-    // Returns only the serverLoc arrays
+    // Returns only the serverLoc arrays where content-type is text/html
     const serverLocArray = uploadedFiles.map((outer) =>
       outer.harRequests.map((inner) => {
-        if (inner.serverLoc) return inner.serverLoc;
+        if (
+          inner.response.headers &&
+          inner.response.headers.contentType &&
+          inner.response.headers.contentType.includes('text/html')
+        )
+          return inner.serverLoc;
       })
     );
 
@@ -38,10 +43,14 @@ heatmapRouter.get('/', async (request, response) => {
     const mergedLocArray = serverLocArray.flat(1);
 
     // Removes undefined values from the array
-    const filteredMergedLocArray = mergedLocArray.filter((x) => x !== undefined);
+    const filteredMergedLocArray = mergedLocArray.filter(
+      (x) => x !== undefined
+    );
 
     // Stringifies merged serverLoc array
-    const mergedLocStringArray = filteredMergedLocArray.map((item) => JSON.stringify(item));
+    const mergedLocStringArray = filteredMergedLocArray.map((item) =>
+      JSON.stringify(item)
+    );
 
     // Returns a set from an array (Keeps only distinct values)
     const distinctServerLocSet = [...new Set(mergedLocStringArray)];
@@ -60,7 +69,10 @@ heatmapRouter.get('/', async (request, response) => {
 
     // Function to count occurrences of values in an array
     const countOccurrences = (arr, val) =>
-      arr.reduce((a, v) => (JSON.stringify(v) === JSON.stringify(val) ? a + 1 : a), 0);
+      arr.reduce(
+        (a, v) => (JSON.stringify(v) === JSON.stringify(val) ? a + 1 : a),
+        0
+      );
 
     // Array to hold the occurrences of each serverLoc
     const counts = [];

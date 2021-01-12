@@ -24,7 +24,7 @@ const GeneralInfo = () => {
         </Grid>
       </div>
       <h2 style={{ textAlign: 'center', marginTop: '100px' }}>
-        Average Age Per Content Type
+        Average Age Per Content Type (Hours)
       </h2>
       <AverageAge />
     </div>
