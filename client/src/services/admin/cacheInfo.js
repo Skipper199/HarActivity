@@ -22,4 +22,13 @@ const requestDirectives = async (token) => {
   return response.data;
 };
 
-export default { ttl, requestDirectives };
+const responseDirectives = async (token) => {
+  const urlToSend = `${baseUrl}/responsedirectives`;
+  const tokenToSend = `bearer ${token}`;
+  const response = await axios.get(urlToSend, {
+    headers: { Authorization: tokenToSend },
+  });
+  return response.data;
+};
+
+export default { ttl, requestDirectives, responseDirectives };

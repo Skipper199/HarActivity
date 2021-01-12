@@ -18,6 +18,7 @@ const averageAgeRouter = require('./controllers/admin/generalInfo/averageAge');
 const responseTimeRouter = require('./controllers/admin/responseTime/responseTime');
 const ttlRouter = require('./controllers/admin/cacheInfo/ttl');
 const requestDirectivesRouter = require('./controllers/admin/cacheInfo/requestDirectives');
+const responseDirectivesRouter = require('./controllers/admin/cacheInfo/responseDirectives');
 
 const logger = require('./utils/logger');
 const config = require('./utils/config');
@@ -68,6 +69,7 @@ app.use('/admin/generalinfo/averageage', averageAgeRouter);
 app.use('/admin/responsetime', responseTimeRouter);
 app.use('/admin/cacheinfo/ttl', ttlRouter);
 app.use('/admin/cacheinfo/requestdirectives', requestDirectivesRouter);
+app.use('/admin/cacheinfo/responsedirectives', responseDirectivesRouter);
 
 // Handle errors
 app.use(middleware.unknownEndpoint);
