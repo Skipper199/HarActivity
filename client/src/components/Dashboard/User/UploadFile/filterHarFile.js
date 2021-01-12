@@ -6,13 +6,17 @@ const filterHarFile = (jsonContents) => {
       .toLowerCase()
       .replace(/[^a-zA-Z0-9]+(.)/g, (m, chr) => chr.toUpperCase());
 
+  const getUrlExtension = (url) => {
+    return url.split(/[#?]/)[0].split('.').pop().trim();
+  };
+
   const entries = jsonContents.log.entries.map((entry) => ({
     startedDateTime: entry.startedDateTime,
     timings: { wait: entry.timings.wait },
     serverIPAddress: entry.serverIPAddress,
     request: {
       method: entry.request.method,
-      url: new URL(entry.request.url).hostname,
+      url: entry.request.url,
       headers: entry.request.headers
         .filter(
           (header) =>
@@ -49,6 +53,28 @@ const filterHarFile = (jsonContents) => {
         ),
     },
   }));
+
+  for (let i = 0; i < entries.length; i += 1) {
+    if (entries[i].response.headers.contentType === undefined) {
+      const extension = getUrlExtension(entries[i].request.url);
+      if (
+        extension === 'html' ||
+        extension === 'htm' ||
+        extension === 'php' ||
+        extension === 'aspx' ||
+        extension === 'asp' ||
+        extension === 'jsp'
+      ) {
+        entries[i].response.headers.contentType = 'text/html';
+      } else if (
+        /(^((https)|(http)):\/\/(.[^/])+\/$)/.test(entries[i].request.url)
+      ) {
+        entries[i].response.headers.contentType = 'text/html';
+      }
+    }
+    entries[i].request.url = new URL(entries[i].request.url).hostname;
+    console.log(entries[i].request.url);
+  }
 
   const filteredFile = JSON.stringify(entries);
   return filteredFile;
