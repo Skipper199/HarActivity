@@ -73,7 +73,6 @@ const filterHarFile = (jsonContents) => {
       }
     }
     entries[i].request.url = new URL(entries[i].request.url).hostname;
-    console.log(entries[i].request.url);
   }
 
   const filteredFile = JSON.stringify(entries);

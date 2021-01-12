@@ -48,7 +48,9 @@ ttlRouter.get('/', async (request, response, next) => {
               inner.response.headers.cacheControl.includes('max-age=')) ||
               (inner.response.headers.expires !== -1 &&
                 inner.response.headers.expires &&
-                inner.response.headers.lastModified))
+                inner.response.headers.lastModified)) &&
+            !isNaN(new Date(inner.response.headers.expires).getTime()) &&
+            !isNaN(new Date(inner.response.headers.lastModified).getTime())
           ) {
             const obj = {};
 

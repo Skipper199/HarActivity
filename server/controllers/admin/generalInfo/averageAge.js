@@ -41,7 +41,9 @@ averageAgeRouter.get('/', async (request, response, next) => {
               inner.response.headers &&
               inner.response.headers.contentType &&
               inner.response.headers.contentType.includes('/') &&
-              inner.response.headers.lastModified
+              inner.response.headers.lastModified &&
+              !isNaN(new Date(inner.startedDateTime).getTime()) &&
+              !isNaN(new Date(inner.response.headers.lastModified).getTime())
             ) {
               const obj = {
                 contentType: inner.response.headers.contentType.split(';')[0],
@@ -72,10 +74,12 @@ averageAgeRouter.get('/', async (request, response, next) => {
           ageInHours =
             (item.startedDateTime.getTime() - item.lastModified.getTime()) /
             3600000;
+
           ageTotal += ageInHours;
           hits += 1;
         }
       });
+
       ageArray.push(ageTotal / hits);
     }
 
