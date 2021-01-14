@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import Button from '@material-ui/core/Button';
+
+import { StaticMap } from 'react-map-gl';
+import { DeckGL } from 'deck.gl';
+import FlowMapLayer from '@flowmap.gl/core';
 
 import FlowMap, { getViewStateForLocations } from '@flowmap.gl/react';
 import flowmapService from '../../../../services/admin/flowmap';
@@ -28,7 +31,13 @@ const Flowmap = () => {
   return (
     <div>
       {flowmapData !== null ? (
-        <div style={{ height: 720, width: '100%', margin: 'auto' }}>
+        <div
+          style={{
+            position: 'relative',
+            width: '100%',
+            height: 720,
+          }}
+        >
           <FlowMap
             initialViewState={{ longitude: 0, latitude: 0, zoom: 1 }}
             mapboxAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}

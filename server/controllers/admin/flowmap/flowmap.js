@@ -53,7 +53,8 @@ flowmapRouter.get('/', async (request, response, next) => {
 
     const originLocations = distinctGeoLocOrigin.map((elem, index) => ({
       id: index + 1,
-      geoLoc: { lat: elem[0], lon: elem[1] },
+      lat: elem[0],
+      lon: elem[1],
     }));
 
     // Info for destination geolocation
@@ -69,7 +70,8 @@ flowmapRouter.get('/', async (request, response, next) => {
 
     const destinationLocations = distinctGeoLocDest.map((elem, index) => ({
       id: originLocations.length + index + 1,
-      geoLoc: { lat: elem[0], lon: elem[1] },
+      lat: elem[0],
+      lon: elem[1],
     }));
 
     // Keep the route data
@@ -83,7 +85,7 @@ flowmapRouter.get('/', async (request, response, next) => {
             lon: inner.upload.geoLoc[1],
           };
           const destinations = [];
-          if (JSON.stringify(outer.geoLoc) === JSON.stringify(geoLocObj)) {
+          if (outer.lat === geoLocObj.lat && outer.lon === geoLocObj.lon) {
             inner.harRequests.map((item) => {
               if (item.serverLoc)
                 destinations.push({
@@ -107,8 +109,9 @@ flowmapRouter.get('/', async (request, response, next) => {
 
         for (let k = 0; k < destinationLocations.length; k += 1) {
           if (
-            JSON.stringify(destinationLocations[k].geoLoc) ===
-            JSON.stringify(routeData.destinationsGeoLoc[j])
+            destinationLocations[k].lat ===
+              routeData.destinationsGeoLoc[j].lat &&
+            destinationLocations[k].lon === routeData.destinationsGeoLoc[j].lon
           ) {
             destinationID = originLocations.length + k + 1;
             break;
@@ -119,10 +122,8 @@ flowmapRouter.get('/', async (request, response, next) => {
 
         for (let k = 0; k < flows.length; k += 1) {
           if (
-            JSON.stringify({
-              origin: flows[k].origin,
-              dest: flows[k].dest,
-            }) === JSON.stringify({ origin: routeData.id, dest: destinationID })
+            flows[k].origin === routeData.id &&
+            flows[k].dest === destinationID
           ) {
             flows[k].count += 1;
             included = true;
@@ -139,22 +140,7 @@ flowmapRouter.get('/', async (request, response, next) => {
       }
     }
 
-    const locations = originLocations
-      .map((item) => ({
-        id: item.id,
-        lat: item.geoLoc.lat,
-        lon: item.geoLoc.lon,
-      }))
-      .concat(
-        destinationLocations.map((item) => ({
-          id: item.id,
-          lat: item.geoLoc.lat,
-          lon: item.geoLoc.lon,
-        }))
-      );
-
-    console.log(locations);
-    console.log(flows);
+    const locations = originLocations.concat(destinationLocations);
 
     return response.status(200).send({ locations, flows });
   } catch (error) {
