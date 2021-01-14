@@ -19,6 +19,7 @@ const responseTimeRouter = require('./controllers/admin/responseTime/responseTim
 const ttlRouter = require('./controllers/admin/cacheInfo/ttl');
 const requestDirectivesRouter = require('./controllers/admin/cacheInfo/requestDirectives');
 const responseDirectivesRouter = require('./controllers/admin/cacheInfo/responseDirectives');
+const flowmapRouter = require('./controllers/admin/flowmap/flowmap');
 
 const logger = require('./utils/logger');
 const config = require('./utils/config');
@@ -70,6 +71,7 @@ app.use('/admin/responsetime', responseTimeRouter);
 app.use('/admin/cacheinfo/ttl', ttlRouter);
 app.use('/admin/cacheinfo/requestdirectives', requestDirectivesRouter);
 app.use('/admin/cacheinfo/responsedirectives', responseDirectivesRouter);
+app.use('/admin/flowmap', flowmapRouter);
 
 // Handle errors
 app.use(middleware.unknownEndpoint);

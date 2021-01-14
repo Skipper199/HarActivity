@@ -27,7 +27,7 @@ uploadRouter.post('/', async (request, response) => {
   const user = await User.findById(decodedToken.id);
 
   const { ip } = request;
-  const clientInfo = await axios.get(`http://ip-api.com/json/${ip}`);
+  const clientInfo = await axios.get(`http://ipwhois.app/json/${ip}`);
 
   const { harRequests } = body;
 
@@ -59,7 +59,7 @@ uploadRouter.post('/', async (request, response) => {
       upload: {
         date: new Date(),
         isp: clientInfo.data.isp,
-        geoLoc: [clientInfo.data.lat, clientInfo.data.lon],
+        geoLoc: [clientInfo.data.latitude, clientInfo.data.longitude],
       },
       harRequests,
       user: user._id,
