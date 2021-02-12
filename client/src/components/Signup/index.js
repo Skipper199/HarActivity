@@ -14,6 +14,9 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Alert from '@material-ui/lab/Alert';
+import InfoIcon from '@material-ui/icons/Info';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import Tooltip from '@material-ui/core/Tooltip';
 
 import useStyles from './style';
 import signupService from '../../services/signup';
@@ -25,6 +28,7 @@ const Signup = () => {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [email, setEmail] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -43,6 +47,7 @@ const Signup = () => {
       await signupService.signup({
         username,
         password,
+        confirmPassword,
         email,
       });
 
@@ -57,9 +62,12 @@ const Signup = () => {
       history.push('/dashboard');
     } catch (exception) {
       // Empties fields
-      setUsername('');
-      setPassword('');
-      setEmail('');
+      if (exception.response.data.error.includes('Username')) setUsername('');
+      if (exception.response.data.error.includes('Email')) setEmail('');
+      if (exception.response.data.error.includes('Password' || 'Passwords')) {
+        setPassword('');
+        setConfirmPassword('');
+      }
 
       // Sets the error from server response
       setErrorMessage(exception.response.data.error);
@@ -116,19 +124,55 @@ const Signup = () => {
                 autoComplete="current-password"
                 value={password}
                 onChange={({ target }) => setPassword(target.value)}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Tooltip
+                        title={
+                          <>
+                            Password must:<br></br>* Be at least 8 characters
+                            long<br></br>* Contain at least 1 upper case letter
+                            <br></br>* Contain at least 1 number<br></br>*
+                            Contain at least 1 symbol<br></br>
+                          </>
+                        }
+                      >
+                        <InfoIcon />
+                      </Tooltip>
+                    </InputAdornment>
+                  ),
+                }}
+              ></TextField>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                name="confirmPassword"
+                label="Confirm Password"
+                type="password"
+                id="confirmPassword"
+                autoComplete="current-password"
+                value={confirmPassword}
+                onChange={({ target }) => setConfirmPassword(target.value)}
               />
             </Grid>
           </Grid>
           {/* If the error exists show it */}
-          {errorMessage === '' ? (
-            <></>
-          ) : (
+          {errorMessage !== '' &&
+          (username === '' ||
+            password === '' ||
+            email === '' ||
+            confirmPassword === '') ? (
             <div>
               <br></br>
               <Alert variant="outlined" severity="error">
                 {errorMessage}
               </Alert>
             </div>
+          ) : (
+            <>{errorMessage ? setErrorMessage('') : <></>}</>
           )}
           <Button
             type="submit"
@@ -151,7 +195,7 @@ const Signup = () => {
       <Box mt={5}>
         <Typography variant="body2" color="textSecondary" align="center">
           {'Copyright © '}
-          HarAnalyzer {new Date().getFullYear()}
+          HarActivity {new Date().getFullYear()}
           {'.'}
         </Typography>
       </Box>

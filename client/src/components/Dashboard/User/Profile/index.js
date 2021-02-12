@@ -29,26 +29,17 @@ const Profile = ({ setUsername }) => {
 
   // Fetch upload data from server
   useEffect(() => {
-    let isMounted = true; // note this flag denote mount status
-    async function fetchData() {
-      const rows = await userStatsService.userstats(user.token);
-      if (isMounted) {
-        setRows(rows);
-        const reducer = (accumulator, currentValue) =>
-          accumulator + currentValue;
-        const requestsArray = rows.map((item) => item.requests);
-        const dateArray = rows.map((item) => item.date);
-        if (rows.length !== 0) {
-          setTotalRequests(requestsArray.reduce(reducer));
-          setLastUpload(dateArray[rows.length - 1]);
-        }
+    userStatsService.userstats(user.token).then((rows) => {
+      setRows(rows);
+      const reducer = (accumulator, currentValue) => accumulator + currentValue;
+      const requestsArray = rows.map((item) => item.requests);
+      const dateArray = rows.map((item) => item.date);
+      if (rows.length !== 0) {
+        setTotalRequests(requestsArray.reduce(reducer));
+        setLastUpload(dateArray[rows.length - 1]);
       }
-    }
-    fetchData();
-    return () => {
-      isMounted = false;
-    };
-  });
+    });
+  }, []);
 
   // Set collumns for table
   const columns = [

@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const signupRouter = require('express').Router();
+const validator = require('email-validator');
 const PasswordValidator = require('password-validator');
 const User = require('../models/user');
 
@@ -9,7 +10,15 @@ signupRouter.post('/', async (request, response, next) => {
 
   // Set rules for password
   const passwordSchema = new PasswordValidator();
-  passwordSchema.is().min(8).has().uppercase(1).has().digits(1).has().symbols(1);
+  passwordSchema
+    .is()
+    .min(8)
+    .has()
+    .uppercase(1)
+    .has()
+    .digits(1)
+    .has()
+    .symbols(1);
 
   // Returns an array with the password errors
   const validatePassword = passwordSchema.validate(body.password, {
@@ -27,6 +36,12 @@ signupRouter.post('/', async (request, response, next) => {
     passwordHash,
     isAdmin: false,
   });
+
+  if (!validator.validate(body.email)) {
+    return response.status(401).json({
+      error: 'Email is not valid.',
+    });
+  }
 
   // Checks for password errors
   if (validatePassword.includes('min')) {
@@ -47,6 +62,11 @@ signupRouter.post('/', async (request, response, next) => {
   if (validatePassword.includes('symbols')) {
     return response.status(401).json({
       error: 'Password should contain at least one symbol.',
+    });
+  }
+  if (body.password !== body.confirmPassword) {
+    return response.status(401).json({
+      error: 'Passwords do not match.',
     });
   }
 

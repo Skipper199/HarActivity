@@ -7,7 +7,6 @@ import {
   Redirect,
 } from 'react-router-dom';
 
-import Home from './components/Home/index';
 import Login from './components/Login/index';
 import Signup from './components/Signup/index';
 import Dashboard from './components/Dashboard/index';
@@ -29,9 +28,6 @@ const App = () => {
   return (
     <Router>
       <Switch>
-        <Route exact path="/home">
-          <Home />
-        </Route>
         <Route exact path="/login">
           <Login />
         </Route>
@@ -42,7 +38,7 @@ const App = () => {
           {user.username !== '' ? <Dashboard /> : <Redirect to="/login" />}
         </Route>
         <Route exact path="/">
-          <Redirect to="/home" />
+          <Redirect to="/login" />
         </Route>
         <Route path={'/'}>
           <Error404 />

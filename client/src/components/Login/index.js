@@ -95,15 +95,15 @@ const Login = () => {
             onChange={({ target }) => setPassword(target.value)}
           />
           {/* If the error exists show it */}
-          {errorMessage === '' ? (
-            <></>
-          ) : (
+          {errorMessage !== '' && (username === '' || password === '') ? (
             <div>
               <br></br>
               <Alert variant="outlined" severity="error">
                 {errorMessage}
               </Alert>
             </div>
+          ) : (
+            <>{errorMessage ? setErrorMessage('') : <></>}</>
           )}
           <Button
             type="submit"
@@ -127,7 +127,7 @@ const Login = () => {
       <Box mt={8}>
         <Typography variant="body2" color="textSecondary" align="center">
           {'Copyright © '}
-          HarAnalyzer {new Date().getFullYear()}
+          HarActivity {new Date().getFullYear()}
           {'.'}
         </Typography>
       </Box>

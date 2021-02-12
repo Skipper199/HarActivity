@@ -137,7 +137,7 @@ const UserDashboard = () => {
                   align="center"
                 >
                   {'Copyright © '}
-                  HarAnalyzer {new Date().getFullYear()}
+                  HarActivity {new Date().getFullYear()}
                   {'.'}
                 </Typography>
               </Box>

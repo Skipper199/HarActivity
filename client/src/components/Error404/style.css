@@ -1,0 +1,39 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+  display: block;
+}
+
+.h1 {
+  font-size: 144px;
+  font-weight: 100;
+  margin-bottom: 16px;
+  text-align: center;
+  color: white;
+}
+
+.h2 {
+  color: white;
+  text-align: center;
+}
+
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url(https://www.speakgif.com/wp-content/uploads/2015/12/confused-travolta-original-pulp-fiction-animated-gif.gif)
+    50% no-repeat;
+  background-size: cover;
+  z-index: -1;
+  filter: brightness(60%);
+}
+
+.message {
+  text-align: center;
+  position: absolute;
+  width: 100%;
+  top: 25%;
+}
