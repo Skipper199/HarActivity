@@ -123,7 +123,10 @@ const RequestDirectives = () => {
 
   return (
     <>
-      <h3> Request Directives Percentages</h3>
+      <h2 style={{ textAlign: 'center', marginTop: '100px' }}>
+        {' '}
+        Request Directives Percentages
+      </h2>
       <div>
         <FormControl className={classes.formControl}>
           <InputLabel id="group-by">Group By</InputLabel>

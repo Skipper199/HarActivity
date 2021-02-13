@@ -49,7 +49,7 @@ const Profile = ({ setUsername }) => {
     return () => {
       isMounted = false;
     };
-  });
+  },[]);
 
   // Set collumns for table
   const columns = [

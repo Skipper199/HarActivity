@@ -35,17 +35,15 @@ uploadRouter.post('/', async (request, response) => {
 
   for (let i = 0; i < harRequests.length; i += 1) {
     promises.push(
-      axios
-        .get(`https://get.geojs.io/v1/ip/geo/${harRequests[i].serverIPAddress}.json`)
-        .then((serverInfo) => {
-          // do something with response
-          const serverLoc = [
-            parseFloat(serverInfo.data.latitude),
-            parseFloat(serverInfo.data.longitude),
-          ];
+      axios.get(`http://ipwhois.app/json/${harRequests[i].serverIPAddress}`).then((serverInfo) => {
+        // do something with response
+        const serverLoc = [
+          parseFloat(serverInfo.data.latitude),
+          parseFloat(serverInfo.data.longitude),
+        ];
 
-          harRequests[i].serverLoc = serverLoc;
-        })
+        harRequests[i].serverLoc = serverLoc;
+      })
     );
   }
 
@@ -57,7 +55,7 @@ uploadRouter.post('/', async (request, response) => {
       upload: {
         date: new Date(),
         isp: clientInfo.data.isp,
-        geoLoc: [clientInfo.data.latitude, clientInfo.data.longitude],
+        geoLoc: [parseFloat(clientInfo.data.latitude), parseFloat(clientInfo.data.longitude)],
       },
       harRequests,
       user: user._id,

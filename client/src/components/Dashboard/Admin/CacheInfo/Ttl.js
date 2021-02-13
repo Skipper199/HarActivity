@@ -127,7 +127,7 @@ const Ttl = () => {
 
   return (
     <>
-      <h3> TTL Histogram </h3>
+      <h2 style={{ textAlign: 'center' }}> TTL Histogram </h2>
       <div>
         <FormControl className={classes.formControl}>
           <InputLabel id="group-by">Group By</InputLabel>

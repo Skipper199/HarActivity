@@ -4,11 +4,12 @@ const baseUrl = '/api/user/upload';
 
 // Post request with new username credentials
 const upload = async (token, credentials) => {
+  const xForwardedForIP = process.env.REACT_APP_IP_ADDRESS;
   const tokenToSend = `bearer ${token}`;
   const response = await axios.post(baseUrl, credentials, {
     headers: {
       Authorization: tokenToSend,
-      'x-forwarded-for': '176.58.225.185',
+      'x-forwarded-for': xForwardedForIP,
     },
   });
   return response.data;

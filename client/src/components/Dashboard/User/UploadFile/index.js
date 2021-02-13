@@ -26,6 +26,8 @@ const UploadFiles = () => {
   const [loaded, setLoaded] = useState(false);
   const [uploaded, setUploaded] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [selectedOnce, setSelectedOnce] = useState(false);
+  const [fileToFilter, setFileToFilter] = useState(null);
 
   // Setstates for showing messages
   const [openSuccess, setOpenSuccess] = useState(false);
@@ -34,22 +36,39 @@ const UploadFiles = () => {
 
   const handleSelectedFile = (event) => {
     const filereader = new FileReader();
+    
+    setTimeout(function(){ setLoaded(false); }, 0);
+
+    let differentFile = false;
+    if(fileToFilter !== event.target.files[0]){
+      differentFile = true;
+    }
+
+    setFileToFilter(event.target.files[0]);
 
     // Reading a file as plain text if it exists
     if (event.target.files[0]) {
       filereader.readAsText(event.target.files[0]);
     }
+    
     // Once the file has been read
     filereader.onload = function () {
       if (/.har/.test(event.target.files[0].name)) {
         const fileObj = JSON.parse(filereader.result);
 
         setFilteredFile(filterHarFile(fileObj));
-        setLoaded(true);
+
+        if(differentFile){
+          setLoaded(true);
+        }
+
+        
       } else {
         setOpenWrongFile(true);
       }
     };
+
+    setSelectedOnce(true);
   };
 
   // Handle the upload
@@ -126,7 +145,7 @@ const UploadFiles = () => {
                   href={`data:text/plain;charset=utf-8, ${encodeURIComponent(
                     filteredFile
                   )}`}
-                  download="file.json"
+                  download="filteredHAR.json"
                 >
                   <Button
                     variant="contained"
@@ -173,8 +192,9 @@ const UploadFiles = () => {
               </h4>
             </>
           ) : (
-            <></>
+            <>{selectedOnce ? <CircularProgress />: <></>}</>
           )}
+          
           {uploading && !uploaded ? (
             <div>
               <p>Please wait while we process your file.</p>
