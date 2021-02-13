@@ -1,6 +1,6 @@
 /* eslint-disable import/no-anonymous-default-export */
 import axios from 'axios';
-const baseUrl = '/signup';
+const baseUrl = '/api/signup';
 
 // Post request with signup credentials
 const signup = async (credentials) => {

@@ -1,9 +1,9 @@
 /* eslint-disable import/no-anonymous-default-export */
 import axios from 'axios';
-const baseUrl = '/heatmap';
+const baseUrl = '/api/user/userstats';
 
 // Post request with new username credentials
-const heatmap = async (token) => {
+const userstats = async (token) => {
   const tokenToSend = `bearer ${token}`;
   const response = await axios.get(baseUrl, {
     headers: { Authorization: tokenToSend },
@@ -11,4 +11,4 @@ const heatmap = async (token) => {
   return response.data;
 };
 
-export default { heatmap };
+export default { userstats };

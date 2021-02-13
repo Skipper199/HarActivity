@@ -1,10 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import L from 'leaflet';
 import HeatmapOverlay from 'leaflet-heatmap/leaflet-heatmap.js';
 import 'leaflet/dist/leaflet.css';
 
-import heatmapService from '../../../../services/heatmap';
+import heatmapService from '../../../../services/user/heatmap';
 
 const Heatmap = () => {
   // Get logged user
@@ -26,7 +27,7 @@ const Heatmap = () => {
     return () => {
       isMounted = false;
     };
-  }, [user.token]);
+  }, []);
 
   useEffect(() => {
     if (geoData) {

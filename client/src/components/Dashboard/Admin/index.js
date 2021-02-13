@@ -32,6 +32,7 @@ const Admin = () => {
   const classes = useStyles();
   const user = useSelector((state) => state.user);
 
+  // eslint-disable-next-line no-unused-vars
   const [username, setUsername] = useState(user.username);
 
   const [open, setOpen] = React.useState(true);
@@ -150,7 +151,7 @@ const Admin = () => {
                   align="center"
                 >
                   {'Copyright © '}
-                  HarAnalyzer {new Date().getFullYear()}
+                  HarActivity {new Date().getFullYear()}
                   {'.'}
                 </Typography>
               </Box>

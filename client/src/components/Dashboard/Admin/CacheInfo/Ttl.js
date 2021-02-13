@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import Chart from 'chart.js';
@@ -32,7 +33,7 @@ const Ttl = () => {
 
   // Fetch upload data from server
   useEffect(() => {
-    let isMounted = true; // note this flag denote mount status
+    let isMounted = true;
     async function fetchData() {
       const res = await cacheInfoService.ttl(user.token);
       if (isMounted) {
@@ -45,7 +46,6 @@ const Ttl = () => {
             data: item.occurences,
           })),
         };
-
         setChartData(chartInfo);
       }
     }
@@ -137,8 +137,9 @@ const Ttl = () => {
             defaultValue="0"
             onChange={handleGroupByChange}
           >
-            {originalData.map((item, i) => (
-              <MenuItem key={i} value={i}>
+            <MenuItem value={0}>Nothing</MenuItem>
+            {originalData.slice(1).map((item, i) => (
+              <MenuItem key={i + 1} value={i + 1}>
                 {item.isp}
               </MenuItem>
             ))}

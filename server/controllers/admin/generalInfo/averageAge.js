@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 /* eslint-disable no-loop-func */
 /* eslint-disable array-callback-return */
 const jwt = require('jsonwebtoken');
@@ -71,9 +72,7 @@ averageAgeRouter.get('/', async (request, response, next) => {
         const regex = new RegExp(`${distinctContentTypeArray[i]}`);
 
         if (regex.test(item.contentType)) {
-          ageInHours =
-            (item.startedDateTime.getTime() - item.lastModified.getTime()) /
-            3600000;
+          ageInHours = (item.startedDateTime.getTime() - item.lastModified.getTime()) / 3600000;
 
           ageTotal += ageInHours;
           hits += 1;

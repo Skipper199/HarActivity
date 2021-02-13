@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import generalInfoService from '../../../../services/admin/generalInfo';
@@ -5,7 +6,6 @@ import generalInfoService from '../../../../services/admin/generalInfo';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -38,24 +38,17 @@ const useStyles = makeStyles((theme) => ({
 
 const CountTable = () => {
   const classes = useStyles();
-  const fixedHeightPaper = clsx(classes.paper);
   // Get logged user
   const user = useSelector((state) => state.user);
 
-  // const [numberOfUsers, setNumberOfUsers] = useState(0);
-  // const [numberOfDomains, setNumberOfDomains] = useState(0);
-  // const [numberOfISPs, setNumberOfISPs] = useState(0);
   const [rows, setRows] = useState([]);
 
   // Fetch upload data from server
   useEffect(() => {
-    let isMounted = true; // note this flag denote mount status
+    let isMounted = true;
     async function fetchData() {
       const info = await generalInfoService.countInfo(user.token);
       if (isMounted) {
-        // setNumberOfUsers(info.usersCount);
-        // setNumberOfDomains(info.domainsCount);
-        // setNumberOfISPs(info.ispsCount);
         function createData(name, count) {
           return { name, count };
         }

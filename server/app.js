@@ -36,10 +36,10 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
-    logger.info('connected to MongoDB');
+    logger.info('Connected to MongoDB');
   })
   .catch((error) => {
-    logger.error('error connection to MongoDB:', error.message);
+    logger.error('Error connection to MongoDB:', error.message);
   });
 
 // Remove deprecation warning
@@ -52,26 +52,26 @@ app.use(bodyParser.json({ limit: '50mb' })); // Handle request body
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 // Handle requests to different routes
-app.use('/signup', signupRouter);
-app.use('/login', loginRouter);
+app.use('/api/signup', signupRouter);
+app.use('/api/login', loginRouter);
 
 // Handle requests from user
-app.use('/update/username', updateUsernameRouter);
-app.use('/update/password', updatePasswordRouter);
-app.use('/upload', uploadRouter);
-app.use('/userstats', userStatsRouter);
-app.use('/heatmap', heatmapRouter);
+app.use('/api/user/update/username', updateUsernameRouter);
+app.use('/api/user/update/password', updatePasswordRouter);
+app.use('/api/user/upload', uploadRouter);
+app.use('/api/user/userstats', userStatsRouter);
+app.use('/api/user/heatmap', heatmapRouter);
 
 // Handle requests from admin
-app.use('/admin/generalinfo/countinfo', countInfoRouter);
-app.use('/admin/generalinfo/numberofmethods', numberOfMethodsRouter);
-app.use('/admin/generalinfo/numberofstatus', numberOfStatusRouter);
-app.use('/admin/generalinfo/averageage', averageAgeRouter);
-app.use('/admin/responsetime', responseTimeRouter);
-app.use('/admin/cacheinfo/ttl', ttlRouter);
-app.use('/admin/cacheinfo/requestdirectives', requestDirectivesRouter);
-app.use('/admin/cacheinfo/responsedirectives', responseDirectivesRouter);
-app.use('/admin/flowmap', flowmapRouter);
+app.use('/api/admin/generalinfo/countinfo', countInfoRouter);
+app.use('/api/admin/generalinfo/numberofmethods', numberOfMethodsRouter);
+app.use('/api/admin/generalinfo/numberofstatus', numberOfStatusRouter);
+app.use('/api/admin/generalinfo/averageage', averageAgeRouter);
+app.use('/api/admin/responsetime', responseTimeRouter);
+app.use('/api/admin/cacheinfo/ttl', ttlRouter);
+app.use('/api/admin/cacheinfo/requestdirectives', requestDirectivesRouter);
+app.use('/api/admin/cacheinfo/responsedirectives', responseDirectivesRouter);
+app.use('/api/admin/flowmap', flowmapRouter);
 
 // Handle errors
 app.use(middleware.unknownEndpoint);

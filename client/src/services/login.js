@@ -1,6 +1,6 @@
 /* eslint-disable import/no-anonymous-default-export */
 import axios from 'axios';
-const baseUrl = '/login';
+const baseUrl = '/api/login';
 
 // Post request with login credentials
 const login = async (credentials) => {

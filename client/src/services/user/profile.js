@@ -1,6 +1,6 @@
 /* eslint-disable import/no-anonymous-default-export */
 import axios from 'axios';
-const baseUrl = '/update';
+const baseUrl = '/api/user/update';
 
 // Post request with new username credentials
 const username = async (token, credentials) => {

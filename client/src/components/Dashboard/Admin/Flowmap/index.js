@@ -1,12 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
-import { StaticMap } from 'react-map-gl';
-import { DeckGL } from 'deck.gl';
-import FlowMapLayer from '@flowmap.gl/core';
-
-import FlowMap, { getViewStateForLocations } from '@flowmap.gl/react';
+import FlowMap from '@flowmap.gl/react';
 import flowmapService from '../../../../services/admin/flowmap';
+
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 const Flowmap = () => {
   // Get logged user
@@ -15,7 +14,7 @@ const Flowmap = () => {
 
   // Fetch upload data from server
   useEffect(() => {
-    let isMounted = true; // note this flag denote mount status
+    let isMounted = true;
     async function fetchData() {
       const res = await flowmapService.flowmap(user.token);
       if (isMounted) {

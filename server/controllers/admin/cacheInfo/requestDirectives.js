@@ -38,15 +38,15 @@ requestDirectivesRouter.get('/', async (request, response, next) => {
       headers: outer.harRequests
         .map((inner) => {
           if (
-            inner.response.headers &&
-            inner.response.headers.contentType &&
-            inner.response.headers.contentType.includes('/')
+            inner.request.headers &&
+            inner.request.headers.contentType &&
+            inner.request.headers.contentType.includes('/')
           ) {
             const obj = {
-              contentType: inner.response.headers.contentType.split(';')[0],
+              contentType: inner.request.headers.contentType.split(';')[0],
             };
-            if (inner.response.headers.cacheControl) {
-              obj.cacheControl = inner.response.headers.cacheControl;
+            if (inner.request.headers.cacheControl) {
+              obj.cacheControl = inner.request.headers.cacheControl;
             }
             return obj;
           }
@@ -56,9 +56,7 @@ requestDirectivesRouter.get('/', async (request, response, next) => {
 
     const allISPRequests = requestHeaders.map((item) => item.headers).flat(1);
 
-    const allDistinctContentTypes = [
-      ...new Set(allISPRequests.map((item) => item.contentType)),
-    ];
+    const allDistinctContentTypes = [...new Set(allISPRequests.map((item) => item.contentType))];
 
     const data = [];
     const chartData = [];
@@ -89,10 +87,7 @@ requestDirectivesRouter.get('/', async (request, response, next) => {
       const maxStalePercentage = (maxStaleNumerator / denominator) * 100;
       const minFreshPercentage = (minFreshNumerator / denominator) * 100;
 
-      const maxMinArray = [
-        maxStalePercentage.toFixed(2),
-        minFreshPercentage.toFixed(2),
-      ];
+      const maxMinArray = [maxStalePercentage.toFixed(2), minFreshPercentage.toFixed(2)];
 
       if (maxStaleNumerator !== 0 || minFreshNumerator !== 0) {
         data.push({
@@ -132,16 +127,10 @@ requestDirectivesRouter.get('/', async (request, response, next) => {
           if (allDistinctContentTypes[i] === innerArray[j].contentType) {
             denominator += 1;
 
-            if (
-              innerArray[j].cacheControl &&
-              innerArray[j].cacheControl.includes('max-stale')
-            ) {
+            if (innerArray[j].cacheControl && innerArray[j].cacheControl.includes('max-stale')) {
               maxStaleNumerator += 1;
             }
-            if (
-              innerArray[j].cacheControl &&
-              innerArray[j].cacheControl.includes('min-fresh=')
-            ) {
+            if (innerArray[j].cacheControl && innerArray[j].cacheControl.includes('min-fresh=')) {
               minFreshNumerator += 1;
             }
           }
@@ -150,10 +139,7 @@ requestDirectivesRouter.get('/', async (request, response, next) => {
         const maxStalePercentage = (maxStaleNumerator / denominator) * 100;
         const minFreshPercentage = (minFreshNumerator / denominator) * 100;
 
-        const maxMinArray = [
-          maxStalePercentage.toFixed(2),
-          minFreshPercentage.toFixed(2),
-        ];
+        const maxMinArray = [maxStalePercentage.toFixed(2), minFreshPercentage.toFixed(2)];
 
         if (maxStaleNumerator !== 0 || minFreshNumerator !== 0) {
           data.push({

@@ -60,9 +60,7 @@ flowmapRouter.get('/', async (request, response, next) => {
     // Info for destination geolocation
     const geoLocDest = uploadedFiles
       .map((outer) =>
-        outer.harRequests
-          .map((inner) => inner.serverLoc)
-          .filter((item) => item !== undefined)
+        outer.harRequests.map((inner) => inner.serverLoc).filter((item) => item !== undefined)
       )
       .flat(1);
 
@@ -109,8 +107,7 @@ flowmapRouter.get('/', async (request, response, next) => {
 
         for (let k = 0; k < destinationLocations.length; k += 1) {
           if (
-            destinationLocations[k].lat ===
-              routeData.destinationsGeoLoc[j].lat &&
+            destinationLocations[k].lat === routeData.destinationsGeoLoc[j].lat &&
             destinationLocations[k].lon === routeData.destinationsGeoLoc[j].lon
           ) {
             destinationID = originLocations.length + k + 1;
@@ -121,10 +118,7 @@ flowmapRouter.get('/', async (request, response, next) => {
         let included = false;
 
         for (let k = 0; k < flows.length; k += 1) {
-          if (
-            flows[k].origin === routeData.id &&
-            flows[k].dest === destinationID
-          ) {
+          if (flows[k].origin === routeData.id && flows[k].dest === destinationID) {
             flows[k].count += 1;
             included = true;
           }

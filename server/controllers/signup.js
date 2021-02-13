@@ -10,15 +10,7 @@ signupRouter.post('/', async (request, response, next) => {
 
   // Set rules for password
   const passwordSchema = new PasswordValidator();
-  passwordSchema
-    .is()
-    .min(8)
-    .has()
-    .uppercase(1)
-    .has()
-    .digits(1)
-    .has()
-    .symbols(1);
+  passwordSchema.is().min(8).has().uppercase(1).has().digits(1).has().symbols(1);
 
   // Returns an array with the password errors
   const validatePassword = passwordSchema.validate(body.password, {

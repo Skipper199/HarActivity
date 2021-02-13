@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
@@ -11,8 +12,8 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import { DataGrid } from '@material-ui/data-grid';
 
-import profileService from '../../../../services/profile';
-import userStatsService from '../../../../services/userStats';
+import profileService from '../../../../services/user/profile';
+import userStatsService from '../../../../services/user/userStats';
 import useStyles from './style';
 
 const Profile = ({ setUsername }) => {
@@ -29,17 +30,26 @@ const Profile = ({ setUsername }) => {
 
   // Fetch upload data from server
   useEffect(() => {
-    userStatsService.userstats(user.token).then((rows) => {
-      setRows(rows);
-      const reducer = (accumulator, currentValue) => accumulator + currentValue;
-      const requestsArray = rows.map((item) => item.requests);
-      const dateArray = rows.map((item) => item.date);
-      if (rows.length !== 0) {
-        setTotalRequests(requestsArray.reduce(reducer));
-        setLastUpload(dateArray[rows.length - 1]);
+    let isMounted = true; // note this flag denote mount status
+    async function fetchData() {
+      const rows = await userStatsService.userstats(user.token);
+      if (isMounted) {
+        setRows(rows);
+        const reducer = (accumulator, currentValue) =>
+          accumulator + currentValue;
+        const requestsArray = rows.map((item) => item.requests);
+        const dateArray = rows.map((item) => item.date);
+        if (rows.length !== 0) {
+          setTotalRequests(requestsArray.reduce(reducer));
+          setLastUpload(dateArray[rows.length - 1]);
+        }
       }
-    });
-  }, []);
+    }
+    fetchData();
+    return () => {
+      isMounted = false;
+    };
+  });
 
   // Set collumns for table
   const columns = [

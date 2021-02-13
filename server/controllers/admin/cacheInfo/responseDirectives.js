@@ -56,9 +56,7 @@ responseDirectivesRouter.get('/', async (request, response, next) => {
 
     const allISPResponses = responseHeaders.map((item) => item.headers).flat(1);
 
-    const allDistinctContentTypes = [
-      ...new Set(allISPResponses.map((item) => item.contentType)),
-    ];
+    const allDistinctContentTypes = [...new Set(allISPResponses.map((item) => item.contentType))];
 
     const data = [];
     const chartData = [];

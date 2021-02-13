@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-globals */
+/* eslint-disable prefer-destructuring */
 /* eslint-disable array-callback-return */
 /* eslint-disable no-loop-func */
 const jwt = require('jsonwebtoken');
@@ -72,11 +74,8 @@ ttlRouter.get('/', async (request, response, next) => {
               inner.response.headers.lastModified
             ) {
               const expires = new Date(inner.response.headers.expires);
-              const lastModified = new Date(
-                inner.response.headers.lastModified
-              );
-              const secDiffTtl =
-                (expires.getTime() - lastModified.getTime()) / 1000;
+              const lastModified = new Date(inner.response.headers.lastModified);
+              const secDiffTtl = (expires.getTime() - lastModified.getTime()) / 1000;
 
               if (secDiffTtl >= 0) {
                 obj.ttl = secDiffTtl;

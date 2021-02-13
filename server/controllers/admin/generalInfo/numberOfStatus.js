@@ -47,8 +47,7 @@ numberOfStatusRouter.get('/', async (request, response, next) => {
     const distinctStatusArray = Array.from(distinctStatusSet);
 
     // Function to count occurrences of values in an array
-    const countOccurrences = (arr, val) =>
-      arr.reduce((a, v) => (v === val ? a + 1 : a), 0);
+    const countOccurrences = (arr, val) => arr.reduce((a, v) => (v === val ? a + 1 : a), 0);
 
     // Array to hold the occurrences of each serverLoc
     const counts = [];

@@ -34,9 +34,7 @@ numberOfMethodsRouter.get('/', async (request, response, next) => {
 
     // Returns only the method arrays
     const methodArray = uploadedFiles.map((outer) =>
-      outer.harRequests.map((inner) => 
-         (inner.request.method)
-      )
+      outer.harRequests.map((inner) => inner.request.method)
     );
 
     // Merges all the methods arrays into one
@@ -49,8 +47,7 @@ numberOfMethodsRouter.get('/', async (request, response, next) => {
     const distinctMethodArray = Array.from(distinctMethodSet);
 
     // Function to count occurrences of values in an array
-    const countOccurrences = (arr, val) =>
-      arr.reduce((a, v) => (v === val ? a + 1 : a), 0);
+    const countOccurrences = (arr, val) => arr.reduce((a, v) => (v === val ? a + 1 : a), 0);
 
     // Array to hold the occurrences of each serverLoc
     const counts = [];
@@ -68,7 +65,7 @@ numberOfMethodsRouter.get('/', async (request, response, next) => {
       });
     }
 
-    return response.status(200).send( data );
+    return response.status(200).send(data);
   } catch (error) {
     next(error);
   }

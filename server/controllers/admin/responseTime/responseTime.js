@@ -105,21 +105,15 @@ responseTimeRouter.get('/', async (request, response, next) => {
     });
 
     // Removes undefined values
-    const filteredContentTypeArray = contentTypeArray.filter(
-      (x) => x !== undefined
-    );
+    const filteredContentTypeArray = contentTypeArray.filter((x) => x !== undefined);
     // Keeps only the media-type
-    const splitContentTypeArray = filteredContentTypeArray.map(
-      (item) => item.split(';')[0]
-    );
+    const splitContentTypeArray = filteredContentTypeArray.map((item) => item.split(';')[0]);
 
     const filteredSplitContentTypeArray = splitContentTypeArray.filter((item) =>
       item.includes('/')
     );
 
-    const distinctContentTypeArray = [
-      ...new Set(filteredSplitContentTypeArray),
-    ];
+    const distinctContentTypeArray = [...new Set(filteredSplitContentTypeArray)];
 
     // Return the data needed
     const responseDateArray = uploadedFiles.map((outer) =>
@@ -136,9 +130,7 @@ responseTimeRouter.get('/', async (request, response, next) => {
     const mergedDateResponseArray = responseDateArray.flat(1);
 
     // Removes undefined values
-    const filteredResponseDateArray = mergedDateResponseArray.filter(
-      (x) => x !== undefined
-    );
+    const filteredResponseDateArray = mergedDateResponseArray.filter((x) => x !== undefined);
 
     const arr1 = [];
 

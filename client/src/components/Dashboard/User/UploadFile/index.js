@@ -13,7 +13,7 @@ import Typography from '@material-ui/core/Typography';
 
 import useStyles from './style';
 import filterHarFile from './filterHarFile';
-import uploadService from '../../../../services/uploadFile';
+import uploadService from '../../../../services/user/uploadFile';
 
 const UploadFiles = () => {
   const classes = useStyles();

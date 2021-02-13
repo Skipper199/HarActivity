@@ -36,9 +36,7 @@ uploadRouter.post('/', async (request, response) => {
   for (let i = 0; i < harRequests.length; i += 1) {
     promises.push(
       axios
-        .get(
-          `https://get.geojs.io/v1/ip/geo/${harRequests[i].serverIPAddress}.json`
-        )
+        .get(`https://get.geojs.io/v1/ip/geo/${harRequests[i].serverIPAddress}.json`)
         .then((serverInfo) => {
           // do something with response
           const serverLoc = [

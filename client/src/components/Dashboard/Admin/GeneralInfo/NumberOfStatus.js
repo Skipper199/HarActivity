@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import Chart from 'chart.js';
@@ -9,7 +10,6 @@ const NumberOfStatus = () => {
   // Get logged user
   const user = useSelector((state) => state.user);
 
-  const [numberOfStatus, setNumberOfStatus] = useState([]);
   const [mainStatus, setMainStatus] = useState([]);
 
   // Fetch upload data from server
@@ -18,7 +18,6 @@ const NumberOfStatus = () => {
     async function fetchData() {
       const status = await generalInfoService.numberOfStatus(user.token);
       if (isMounted) {
-        setNumberOfStatus(status);
         function compare(a, b) {
           if (a.count < b.count) {
             return 1;
@@ -28,15 +27,18 @@ const NumberOfStatus = () => {
           }
           return 0;
         }
-        const reducer = (accumulator, currentValue) =>
-          accumulator + currentValue;
+
         status.sort(compare);
-        const mainStatus = status.slice(0, 3);
-        const otherStatus = status.slice(3);
-        const onlyNumber = otherStatus.map((item) => item.count);
-        const otherSum = onlyNumber.reduce(reducer, 0);
-        mainStatus.push({ status: 'Other', count: otherSum });
-        setMainStatus(mainStatus);
+
+        // const reducer = (accumulator, currentValue) =>
+        //   accumulator + currentValue;
+
+        // const mainStatus = status.slice(0, 3);
+        // const otherStatus = status.slice(3);
+        // const onlyNumber = otherStatus.map((item) => item.count);
+        // const otherSum = onlyNumber.reduce(reducer, 0);
+        // mainStatus.push({ status: 'Other', count: otherSum });
+        setMainStatus(status);
       }
     }
     fetchData();
@@ -76,7 +78,7 @@ const NumberOfStatus = () => {
     });
   }, [mainStatus]);
 
-  return <canvas id="statusChart" width="400" height="300"></canvas>;
+  return <canvas id="statusChart" width="82.5" height="32.5"></canvas>;
 };
 
 export default NumberOfStatus;

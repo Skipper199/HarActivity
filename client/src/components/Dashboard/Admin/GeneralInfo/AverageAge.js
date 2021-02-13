@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import Chart from 'chart.js';
@@ -13,7 +14,7 @@ const AverageAge = () => {
 
   // Fetch upload data from server
   useEffect(() => {
-    let isMounted = true; // note this flag denote mount status
+    let isMounted = true;
     async function fetchData() {
       const res = await generalInfoService.averageAge(user.token);
       if (isMounted) {
