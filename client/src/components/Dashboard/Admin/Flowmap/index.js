@@ -29,6 +29,7 @@ const Flowmap = () => {
 
   return (
     <div>
+      <h2 style={{ textAlign: 'center' }}>Flow Map Based On User Data</h2>
       {flowmapData !== null ? (
         <div
           style={{

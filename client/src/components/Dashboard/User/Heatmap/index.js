@@ -16,7 +16,7 @@ const Heatmap = () => {
 
   // Fetch data from server
   useEffect(() => {
-    let isMounted = true; // note this flag denote mount status
+    let isMounted = true;
     async function fetchData() {
       const responseData = await heatmapService.heatmap(user.token);
       if (isMounted) {
@@ -73,10 +73,13 @@ const Heatmap = () => {
   }, [mountedOnce, geoData]);
 
   return (
-    <div
-      style={{ height: 720, width: '100%', margin: 'auto' }}
-      id="map-canvas"
-    ></div>
+    <>
+      <h2 style={{ textAlign: 'center' }}>Heatmap Of Visited Websites</h2>
+      <div
+        style={{ height: 720, width: '100%', margin: 'auto' }}
+        id="map-canvas"
+      ></div>
+    </>
   );
 };
 
