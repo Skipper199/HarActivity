@@ -1,6 +1,6 @@
 {
-  "name": "fontend",
-  "version": "0.1.0",
+  "name": "client",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@flowmap.gl/react": "^7.3.3",

@@ -123,7 +123,7 @@ const Profile = ({ setUsername }) => {
       setNewPassword('');
       setPasswordErrorMessage('');
       setCorrectPasswordEntry(true);
-      setPasswordHelperText('Password updated successfully');
+      setPasswordHelperText('Password updated successfully!');
       setTimeout(deleteMessage, 5000);
     } catch (exception) {
       setPasswordErrorMessage(exception.response.data.error);
